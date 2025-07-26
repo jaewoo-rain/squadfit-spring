@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "trainers")
 public class Trainer {
 
     @Id @GeneratedValue
@@ -19,4 +20,16 @@ public class Trainer {
 //    private List<Comment> comments;
 
 //    private List<Report> reports;
+
+    // == 생성 메서드 == //
+    public static Trainer createTrainer(UserProfile userProfile){
+        Trainer trainer = new Trainer();
+        trainer.userProfile = userProfile;
+        return trainer;
+    }
+
+    // == 비즈니스로직 ? == //
+    public void changeProfile(String name, String phone, String birth){
+        userProfile.changeProfile(name, phone, birth);
+    }
 }
