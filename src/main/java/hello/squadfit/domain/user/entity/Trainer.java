@@ -3,11 +3,14 @@ package hello.squadfit.domain.user.entity;
 import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "trainers")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Trainer {
 
     @Id @GeneratedValue
@@ -29,6 +32,10 @@ public class Trainer {
     }
 
     // == 비즈니스로직 ? == //
+
+    /**
+     * 프로필 변경
+     */
     public void changeProfile(String name, String phone, String birth){
         userProfile.changeProfile(name, phone, birth);
     }

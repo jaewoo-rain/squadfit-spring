@@ -5,8 +5,11 @@ import hello.squadfit.domain.record.entity.Record;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
@@ -26,11 +29,13 @@ public class User {
     private String nickName;
     private Integer level;
     private Integer requiredExperience; // 잔여 경험치
-    private Boolean subscribed; // 구독 여부
+//    private Boolean subscribed; // 구독 여부
     private Integer point;
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
     // == 연관관계 ==
+    @OneToOne(mappedBy = "user", fetch = LAZY)
+    private Subscription subscription;
 
 //    private List<Notification> notifications = new ArrayList<>();
 
@@ -49,6 +54,12 @@ public class User {
 
 //    private List<Report> reports = new ArrayList<>();
 
+    // == 연관관계 편의 메서드 == //
+    public void linkSubscription(Subscription subscription){
+        this.subscription = subscription;
+    }
+
+
     // == 생성 메서드 == //
     public static User createUser(UserProfile profile, String nickName){
         User user = new User();
@@ -56,7 +67,7 @@ public class User {
         user.nickName = nickName;
         user.level = 1;
         user.requiredExperience = 100;
-        user.subscribed = false;
+        user.subscription = null;
         user.point = 0;
         user.availableReportCount = 0;
         return user;
@@ -102,21 +113,20 @@ public class User {
     /**
      * 구독하기
      */
-    public void subscribe(){
-        if(subscribed){
-            throw new IllegalStateException("이미 구독한 상태입니다");
+    public void subscribe(LocalDateTime startDate, LocalDateTime endDate){
+        if (this.subscription != null && Boolean.TRUE.equals(this.subscription.getStatus())) {
+            throw new IllegalStateException("이미 구독 중입니다.");
         }
-        subscribed = true;
+        this.subscription = Subscription.createSubscription(this, startDate, endDate);
     }
-
     /**
      * 구독해지
      */
     public void unsubscribe(){
-        if(!subscribed){
-            throw new IllegalStateException("구독 상태가 아닙니다.");
+        if (this.subscription == null) {
+            throw new IllegalStateException("구독 정보가 없습니다.");
         }
-        subscribed = false;
+        subscription.unsubscribe();
     }
 
     /**
