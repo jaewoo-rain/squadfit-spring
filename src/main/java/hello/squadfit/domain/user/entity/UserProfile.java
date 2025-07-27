@@ -6,6 +6,7 @@ import lombok.*;
 
 @Embeddable
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfile {
 
     private String username;
@@ -19,6 +20,16 @@ public class UserProfile {
         this.birth = birth;
         this.phone = phone;
         this.name = name;
+    }
+
+    @Builder
+    public UserProfile(String username, String password, String birth, String phone, String name, Role role){
+        this.username = username;
+        this.password = password;
+        this.birth = birth;
+        this.phone = phone;
+        this.name = name;
+        this.role = role;
     }
 
 }

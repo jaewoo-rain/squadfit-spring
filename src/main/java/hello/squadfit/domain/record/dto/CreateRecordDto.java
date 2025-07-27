@@ -10,10 +10,10 @@ import lombok.Data;
 public class CreateRecordDto {
 
     private User user;
-    private int repeat;
-    private int weight;
-    private int successNumber;
-    private int failNumber;
+    private Integer repeat;
+    private Integer weight;
+    private Integer successNumber;
+    private Integer failNumber;
     private ExerciseType exerciseType;
 
 }

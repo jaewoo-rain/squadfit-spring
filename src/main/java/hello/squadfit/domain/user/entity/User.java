@@ -2,6 +2,7 @@ package hello.squadfit.domain.user.entity;
 
 import hello.squadfit.domain.PointConst;
 import hello.squadfit.domain.record.entity.Record;
+import hello.squadfit.domain.user.dto.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -61,10 +62,10 @@ public class User {
 
 
     // == 생성 메서드 == //
-    public static User createUser(UserProfile profile, String nickName){
+    public static User createUser(CreateUserDto dto){
         User user = new User();
-        user.profile = profile;
-        user.nickName = nickName;
+        user.profile = dto.getProfile();
+        user.nickName = dto.getNickName();
         user.level = 1;
         user.requiredExperience = 100;
         user.subscription = null;
