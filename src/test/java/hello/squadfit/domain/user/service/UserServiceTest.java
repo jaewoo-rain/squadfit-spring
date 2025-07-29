@@ -4,7 +4,6 @@ import hello.squadfit.api.user.request.CreateUserProfileRequest;
 import hello.squadfit.api.user.request.CreateUserRequest;
 import hello.squadfit.api.user.request.LoginRequest;
 import hello.squadfit.domain.user.entity.User;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -106,6 +104,5 @@ class UserServiceTest {
         });
         assertEquals("비밀번호가 일치하지 않습니다.", exception.getMessage());
     }
-
 
 }
