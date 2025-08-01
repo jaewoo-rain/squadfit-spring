@@ -1,12 +1,12 @@
 package hello.squadfit.domain.user.entity;
 
-import hello.squadfit.domain.report.entity.Report;
-import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;
-
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "trainers")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Trainer {
 
     @Id @GeneratedValue
@@ -14,9 +14,25 @@ public class Trainer {
     private Long id;
 
     @Embedded
-    private UserProfile userProfile;
+    private UserProfile profile;
 
 //    private List<Comment> comments;
 
 //    private List<Report> reports;
+
+    // == 생성 메서드 == //
+    public static Trainer createTrainer(UserProfile profile){
+        Trainer trainer = new Trainer();
+        trainer.profile = profile;
+        return trainer;
+    }
+
+    // == 비즈니스로직 ? == //
+
+    /**
+     * 프로필 변경
+     */
+    public void changeProfile(String name, String phone, String birth){
+        profile.changeProfile(name, phone, birth);
+    }
 }
