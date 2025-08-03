@@ -1,7 +1,7 @@
 package hello.squadfit.domain.record.entity;
 
 import hello.squadfit.domain.record.dto.CreateRecordDto;
-import hello.squadfit.domain.user.entity.User;
+import hello.squadfit.domain.user.entity.Users;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -21,8 +21,8 @@ public class Record {
     private Long id;
 
     @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "user_id") // FK 이름
-    private User user;
+    @JoinColumn(name = "users_id") // FK 이름
+    private Users users;
 
     private LocalDateTime recordDate;
     private Integer repeat;
@@ -35,15 +35,15 @@ public class Record {
     private ExerciseType exerciseType;
 
     // == 연관관계 편의 메서드 == //
-    private void setUser(User user){
-        this.user = user;
-        user.getRecords().add(this);
+    private void setUsers(Users users){
+        this.users = users;
+        users.getRecords().add(this);
     }
 
     // == 생성 메서드 == //
     public static Record createRecord(CreateRecordDto createRecordDto){
         Record record = new Record();
-        record.setUser(createRecordDto.getUser());
+        record.setUsers(createRecordDto.getUsers());
         record.recordDate = LocalDateTime.now();
         record.repeat = createRecordDto.getRepeat();
         record.weight = createRecordDto.getWeight();

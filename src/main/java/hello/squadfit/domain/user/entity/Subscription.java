@@ -20,25 +20,25 @@ public class Subscription {
 
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Users users;
 
     private Boolean status;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
     // == 연관관계 편의 메서드 == //
-    private void setUser(User user){
-        this.user = user;
-        user.linkSubscription(this);
+    private void setUsers(Users users){
+        this.users = users;
+        users.linkSubscription(this);
     }
 
     // == 생성 메서드 == //
-    public static Subscription createSubscription(User user, LocalDateTime startDate, LocalDateTime endDate){
+    public static Subscription createSubscription(Users users, LocalDateTime startDate, LocalDateTime endDate){
         Subscription subscription = new Subscription();
         subscription.status = true;
         subscription.startDate = startDate;
         subscription.endDate = endDate;
-        subscription.setUser(user);
+        subscription.setUsers(users);
         return subscription;
     }
 

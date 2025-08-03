@@ -1,7 +1,7 @@
 package hello.squadfit.domain.record.dto;
 
 import hello.squadfit.domain.record.entity.ExerciseType;
-import hello.squadfit.domain.user.entity.User;
+import hello.squadfit.domain.user.entity.Users;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 public class CreateRecordDto {
 
-    private User user;
+    private Users users;
     private Integer repeat;
     private Integer weight;
     private Integer successNumber;

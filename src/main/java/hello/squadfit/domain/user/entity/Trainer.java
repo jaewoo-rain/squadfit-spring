@@ -17,7 +17,6 @@ public class Trainer {
     private UserProfile profile;
 
 //    private List<Comment> comments;
-
 //    private List<Report> reports;
 
     // == 생성 메서드 == //
@@ -28,7 +27,6 @@ public class Trainer {
     }
 
     // == 비즈니스로직 ? == //
-
     /**
      * 프로필 변경
      */

@@ -18,7 +18,7 @@ import static jakarta.persistence.FetchType.*;
 //@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder때문에 사용해야함, 생성자 외부에서 못만들도록 하기 위해
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 protected로 설정하여 기본생성자 사용못하게 막기
 @Table(name = "users")
-public class User {
+public class Users {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -27,15 +27,24 @@ public class User {
     @Embedded
     private UserProfile profile;
 
+    @Column(nullable = false)
     private String nickName;
+
+    @Column(nullable = false)
     private Integer level;
+
+    @Column(nullable = false)
     private Integer requiredExperience; // 잔여 경험치
+
 //    private Boolean subscribed; // 구독 여부
+    @Column(nullable = false)
     private Integer point;
+
+    @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
     // == 연관관계 ==
-    @OneToOne(mappedBy = "user", fetch = LAZY)
+    @OneToOne(mappedBy = "users", fetch = LAZY)
     private Subscription subscription;
 
 //    private List<Notification> notifications = new ArrayList<>();
@@ -46,7 +55,7 @@ public class User {
 
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user") // record 테이블에 있는 user 필드를 참조함
+    @OneToMany(mappedBy = "users") // record 테이블에 있는 user 필드를 참조함
     private List<Record> records = new ArrayList<>();
 
 //    private List<Video> videos = new ArrayList<>();
@@ -62,16 +71,16 @@ public class User {
 
 
     // == 생성 메서드 == //
-    public static User createUser(CreateUserDto dto){
-        User user = new User();
-        user.profile = dto.getProfile();
-        user.nickName = dto.getNickName();
-        user.level = 1;
-        user.requiredExperience = 100;
-        user.subscription = null;
-        user.point = 0;
-        user.availableReportCount = 0;
-        return user;
+    public static Users createUser(CreateUserDto dto){
+        Users users = new Users();
+        users.profile = dto.getProfile();
+        users.nickName = dto.getNickName();
+        users.level = 1;
+        users.requiredExperience = 100;
+        users.subscription = null;
+        users.point = 0;
+        users.availableReportCount = 0;
+        return users;
     }
 
     // == 비즈니스 로직 == //

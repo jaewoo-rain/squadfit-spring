@@ -1,19 +1,18 @@
 package hello.squadfit.domain.user.service;
 
-import hello.squadfit.api.user.request.CreateUserRequest;
 import hello.squadfit.api.user.request.CreateUserProfileRequest;
 import hello.squadfit.api.user.request.LoginRequest;
 import hello.squadfit.domain.user.Role;
 import hello.squadfit.domain.user.dto.CreateUserDto;
-import hello.squadfit.domain.user.entity.User;
+import hello.squadfit.domain.user.entity.Users;
 import hello.squadfit.domain.user.entity.UserProfile;
-import hello.squadfit.domain.user.repository.UserJpaRepository;
+import hello.squadfit.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -21,50 +20,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Long register(CreateUserRequest createUserRequest){
-        CreateUserProfileRequest profileRequest = createUserRequest.getProfile();
+    public Long register(CreateUserProfileRequest request){
+
         UserProfile profile = UserProfile.builder()
                 .role(Role.Member)
-                .phone(profileRequest.getPhone())
-                .name(profileRequest.getName())
-                .password(profileRequest.getPassword())
-                .username(profileRequest.getUsername())
-                .birth(profileRequest.getBirth())
+                .phone(request.getPhone())
+                .name(request.getName())
+                .password(request.getPassword())
+                .username(request.getUsername())
+                .birth(request.getBirth())
                 .build();
 
-        List<User> findUsers = userJpaRepository.findByUsername(profile.getUsername());
-        if(!findUsers.isEmpty()){
+        Optional<Users> findUser = userRepository.findByProfileUsername(profile.getUsername());
+        if(!findUser.isEmpty()){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
-        User user = User.createUser(new CreateUserDto(profile, createUserRequest.getNickName()));
-        Long userId = userJpaRepository.save(user);
-        return userId;
+        Users users = Users.createUser(new CreateUserDto(profile, request.getNickName()));
+        Users save = userRepository.save(users);
+        return save.getId();
     }
 
-    public User findOne(Long userId){
-        User user = userJpaRepository.findOne(userId);
-        return user;
+    public Optional<Users> findOne(Long userId){
+        return userRepository.findById(userId);
     }
 
-    public User login(LoginRequest loginRequest) {
-        List<User> findUsers = userJpaRepository.findByUsername(loginRequest.getUsername());
+    public Users login(LoginRequest loginRequest) {
+        Users findUsers = userRepository.findByProfileUsername(loginRequest.getUsername())
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 아이디입니다."));
 
-        if (findUsers.isEmpty()) {
-            throw new IllegalStateException("존재하지 않는 아이디입니다.");
+        if(!findUsers.getProfile().getPassword().equals(loginRequest.getPassword())){
+            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
 
-        for (User user : findUsers) {
-            if (user.getProfile().getPassword().equals(loginRequest.getPassword())) {
-                log.info("user = {}", user);
-                return user;
-            }
-        }
+        log.info("getPoint = {}", findUsers.getPoint());
 
-        throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+        return findUsers;
     }
 
 
