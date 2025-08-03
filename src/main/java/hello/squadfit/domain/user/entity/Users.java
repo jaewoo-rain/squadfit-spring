@@ -1,7 +1,7 @@
 package hello.squadfit.domain.user.entity;
 
 import hello.squadfit.domain.PointConst;
-import hello.squadfit.domain.record.entity.Record;
+import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.user.dto.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.*;
@@ -56,7 +56,7 @@ public class Users {
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "users") // record 테이블에 있는 user 필드를 참조함
-    private List<Record> records = new ArrayList<>();
+    private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
 
 //    private List<Video> videos = new ArrayList<>();
 
