@@ -1,8 +1,8 @@
-package hello.squadfit.domain.user.entity;
+package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.domain.PointConst;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
-import hello.squadfit.domain.user.dto.CreateUserDto;
+import hello.squadfit.domain.member.dto.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.*;
 
 @Entity
@@ -17,11 +18,11 @@ import static jakarta.persistence.FetchType.*;
 //@Builder // 나중에 도입하자
 //@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder때문에 사용해야함, 생성자 외부에서 못만들도록 하기 위해
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 protected로 설정하여 기본생성자 사용못하게 막기
-@Table(name = "users")
-public class Users {
+@Table(name = "member")
+public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column(name = "member_id")
     private Long id;
 
     @Embedded
@@ -44,7 +45,7 @@ public class Users {
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
     // == 연관관계 ==
-    @OneToOne(mappedBy = "users", fetch = LAZY)
+    @OneToOne(mappedBy = "member", fetch = LAZY, cascade = ALL)
     private Subscription subscription;
 
 //    private List<Notification> notifications = new ArrayList<>();
@@ -55,7 +56,7 @@ public class Users {
 
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
-    @OneToMany(mappedBy = "users") // record 테이블에 있는 user 필드를 참조함
+    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 user 필드를 참조함
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
 
 //    private List<Video> videos = new ArrayList<>();
@@ -71,16 +72,16 @@ public class Users {
 
 
     // == 생성 메서드 == //
-    public static Users createUser(CreateUserDto dto){
-        Users users = new Users();
-        users.profile = dto.getProfile();
-        users.nickName = dto.getNickName();
-        users.level = 1;
-        users.requiredExperience = 100;
-        users.subscription = null;
-        users.point = 0;
-        users.availableReportCount = 0;
-        return users;
+    public static Member createUser(CreateUserDto dto){
+        Member member = new Member();
+        member.profile = dto.getProfile();
+        member.nickName = dto.getNickName();
+        member.level = 1;
+        member.requiredExperience = 100;
+        member.subscription = null;
+        member.point = 0;
+        member.availableReportCount = 0;
+        return member;
     }
 
     // == 비즈니스 로직 == //

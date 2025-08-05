@@ -1,8 +1,8 @@
-package hello.squadfit.domain.user.service;
+package hello.squadfit.domain.member.service;
 
 import hello.squadfit.api.user.request.CreateUserProfileRequest;
 import hello.squadfit.api.user.request.LoginRequest;
-import hello.squadfit.domain.user.entity.Users;
+import hello.squadfit.domain.member.entity.Member;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
-class UsersServiceTest {
+class MemberServiceTest {
 
     @Autowired UserService userService;
 
@@ -28,10 +28,10 @@ class UsersServiceTest {
                         ,"010-1234-5678","jaewoo","yang");
 
         Long userId = userService.register(createUserProfileRequest);
-        Optional<Users> user = userService.findOne(userId);
-        Users findUsers = user.orElse(null);
+        Optional<Member> user = userService.findOne(userId);
+        Member findMember = user.orElse(null);
 
-        assertThat(findUsers.getNickName()).isEqualTo(createUserProfileRequest.getNickName());
+        assertThat(findMember.getNickName()).isEqualTo(createUserProfileRequest.getNickName());
 
     }
 
@@ -39,7 +39,7 @@ class UsersServiceTest {
     public void login(){
 
         LoginRequest loginRequest = new LoginRequest("test", "1234");
-        Users user = userService.login(loginRequest);
+        Member user = userService.login(loginRequest);
 
         assertThat(user.getProfile().getUsername()).isEqualTo(loginRequest.getUsername());
         assertThat(user.getProfile().getPassword()).isEqualTo(loginRequest.getPassword());

@@ -4,9 +4,11 @@ import hello.squadfit.domain.record.entity.ExerciseRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<ExerciseRecord, Long> {
 
-    List<ExerciseRecord> findAllByUsersId(Long userId);
+    List<ExerciseRecord> findAllByMemberId(Long userId);
 
+    Optional<ExerciseRecord> findByMemberIdAndId(Long memberId, Long exerciseId);
 }

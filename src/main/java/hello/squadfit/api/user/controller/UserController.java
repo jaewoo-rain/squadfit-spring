@@ -3,8 +3,8 @@ package hello.squadfit.api.user.controller;
 import hello.squadfit.api.user.request.CreateUserProfileRequest;
 import hello.squadfit.api.user.request.LoginRequest;
 import hello.squadfit.api.user.response.LoginResponse;
-import hello.squadfit.domain.user.entity.Users;
-import hello.squadfit.domain.user.service.UserService;
+import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,13 +30,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
 
-        Users loginUsers = userService.login(request);
+        Member loginMember = userService.login(request);
         LoginResponse result = LoginResponse.builder()
-                .level(loginUsers.getLevel())
-                .point(loginUsers.getPoint())
-                .nickName(loginUsers.getNickName())
-                .requiredExperience(loginUsers.getRequiredExperience())
-                .availableReportCount(loginUsers.getAvailableReportCount())
+                .level(loginMember.getLevel())
+                .point(loginMember.getPoint())
+                .nickName(loginMember.getNickName())
+                .requiredExperience(loginMember.getRequiredExperience())
+                .availableReportCount(loginMember.getAvailableReportCount())
                 .build();
         return ResponseEntity.status(200).body(result);
     }

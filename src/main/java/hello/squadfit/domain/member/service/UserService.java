@@ -1,12 +1,12 @@
-package hello.squadfit.domain.user.service;
+package hello.squadfit.domain.member.service;
 
 import hello.squadfit.api.user.request.CreateUserProfileRequest;
 import hello.squadfit.api.user.request.LoginRequest;
-import hello.squadfit.domain.user.Role;
-import hello.squadfit.domain.user.dto.CreateUserDto;
-import hello.squadfit.domain.user.entity.Users;
-import hello.squadfit.domain.user.entity.UserProfile;
-import hello.squadfit.domain.user.repository.UserRepository;
+import hello.squadfit.domain.member.Role;
+import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.entity.UserProfile;
+import hello.squadfit.domain.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,31 +34,36 @@ public class UserService {
                 .birth(request.getBirth())
                 .build();
 
-        Optional<Users> findUser = userRepository.findByProfileUsername(profile.getUsername());
+        Optional<Member> findUser = userRepository.findByProfileUsername(profile.getUsername());
         if(!findUser.isEmpty()){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
-        Users users = Users.createUser(new CreateUserDto(profile, request.getNickName()));
-        Users save = userRepository.save(users);
+        Member member = Member.createUser(new CreateUserDto(profile, request.getNickName()));
+        Member save = userRepository.save(member);
         return save.getId();
     }
 
-    public Optional<Users> findOne(Long userId){
+    public Optional<Member> findOne(Long userId){
         return userRepository.findById(userId);
     }
 
-    public Users login(LoginRequest loginRequest) {
-        Users findUsers = userRepository.findByProfileUsername(loginRequest.getUsername())
+    public Member login(LoginRequest loginRequest) {
+        Member findMember = userRepository.findByProfileUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 아이디입니다."));
 
-        if(!findUsers.getProfile().getPassword().equals(loginRequest.getPassword())){
+        if(!findMember.getProfile().getPassword().equals(loginRequest.getPassword())){
             throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
         }
 
-        log.info("getPoint = {}", findUsers.getPoint());
+        log.info("getPoint = {}", findMember.getPoint());
 
-        return findUsers;
+        return findMember;
+    }
+
+    // 유저 존재하는지 확인
+    public boolean existsMember(Long userId){
+        return userRepository.existsMemberById(userId);
     }
 
 

@@ -1,7 +1,7 @@
 package hello.squadfit.domain.record.entity;
 
 import hello.squadfit.domain.record.dto.CreateRecordDto;
-import hello.squadfit.domain.user.entity.Users;
+import hello.squadfit.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,9 +21,9 @@ public class ExerciseRecord {
     @Column(name = "record_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "users_id") // FK 이름
-    private Users users;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id") // FK 이름
+    private Member member;
 
     private LocalDateTime recordDate;
     private Integer repeat;
@@ -31,20 +31,20 @@ public class ExerciseRecord {
     private Integer successNumber;
     private Integer failNumber;
 
-    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "exercise_type_id")
     private ExerciseType exerciseType;
 
     // == 연관관계 편의 메서드 == //
-    private void setUsers(Users users){
-        this.users = users;
-        users.getExerciseRecords().add(this);
+    private void setMember(Member member){
+        this.member = member;
+        member.getExerciseRecords().add(this);
     }
 
     // == 생성 메서드 == //
     public static ExerciseRecord createRecord(CreateRecordDto createRecordDto){
         ExerciseRecord exerciseRecord = new ExerciseRecord();
-        exerciseRecord.setUsers(createRecordDto.getUsers());
+        exerciseRecord.setMember(createRecordDto.getMember());
         exerciseRecord.recordDate = LocalDateTime.now();
         exerciseRecord.repeat = createRecordDto.getRepeat();
         exerciseRecord.weight = createRecordDto.getWeight();

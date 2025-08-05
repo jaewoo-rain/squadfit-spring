@@ -1,4 +1,4 @@
-package hello.squadfit.domain.user.entity;
+package hello.squadfit.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

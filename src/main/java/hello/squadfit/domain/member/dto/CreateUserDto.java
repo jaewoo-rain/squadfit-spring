@@ -1,6 +1,6 @@
-package hello.squadfit.domain.user.dto;
+package hello.squadfit.domain.member.dto;
 
-import hello.squadfit.domain.user.entity.UserProfile;
+import hello.squadfit.domain.member.entity.UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

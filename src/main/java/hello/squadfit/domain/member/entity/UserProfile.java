@@ -1,6 +1,6 @@
-package hello.squadfit.domain.user.entity;
+package hello.squadfit.domain.member.entity;
 
-import hello.squadfit.domain.user.Role;
+import hello.squadfit.domain.member.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;

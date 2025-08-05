@@ -4,9 +4,9 @@ import hello.squadfit.domain.record.ExerciseCategory;
 import lombok.Builder;
 import lombok.Getter;
 
-@Getter
 @Builder
-public class SingleRecordResponse {
+@Getter
+public class SingleRecordResponse{
     private Long exerciseRecordId;
     private String exerciseName;
     private Integer weight;
