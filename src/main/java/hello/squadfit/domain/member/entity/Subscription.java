@@ -23,6 +23,7 @@ public class Subscription {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer count; // 연장횟수
+    private Long memberId; // 구독 내역 확인을 위한 멤버
 
     // == 연관관계 == //
     @OneToOne(mappedBy = "subscription", fetch = LAZY)
@@ -37,6 +38,7 @@ public class Subscription {
         subscription.endDate = endDate;
         member.linkSubscription(subscription);
         subscription.count = 0;
+        subscription.memberId = member.getId();
         return subscription;
     }
 
