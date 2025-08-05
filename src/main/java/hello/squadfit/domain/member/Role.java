@@ -1,4 +1,4 @@
-package hello.squadfit.domain.user;
+package hello.squadfit.domain.member;
 
 public enum Role {
     Member, Trainer, ADMIN
