@@ -26,7 +26,7 @@ public class Member {
     private Long id;
 
     @Embedded
-    private UserProfile profile;
+    private MemberProfile profile;
 
     @Column(nullable = false)
     private String nickName;
@@ -37,16 +37,20 @@ public class Member {
     @Column(nullable = false)
     private Integer requiredExperience; // 잔여 경험치
 
-//    private Boolean subscribed; // 구독 여부
-    @Column(nullable = false)
-    private Integer point;
+    private Boolean subscribed; // 구독 여부
+
 
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
-    // == 연관관계 ==
-    @OneToOne(mappedBy = "member", fetch = LAZY, cascade = ALL)
+    // == 연관관계 == //
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "subscription_id")
     private Subscription subscription;
+
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    @Column(nullable = false)
+    private List<Point> point = new ArrayList<>();
 
 //    private List<Notification> notifications = new ArrayList<>();
 
@@ -66,8 +70,9 @@ public class Member {
 //    private List<Report> reports = new ArrayList<>();
 
     // == 연관관계 편의 메서드 == //
-    public void linkSubscription(Subscription subscription){
+    public void linkSubscription(Subscription subscription) {
         this.subscription = subscription;
+        this.subscription.linkedMember(this);
     }
 
 
@@ -79,37 +84,38 @@ public class Member {
         member.level = 1;
         member.requiredExperience = 100;
         member.subscription = null;
-        member.point = 0;
+//        member.point = 0;
         member.availableReportCount = 0;
+        member.subscribed = false;
         return member;
     }
 
     // == 비즈니스 로직 == //
-    /**
-     * 출석 포인트 증가
-     */
-    public void attendancePoint(){
-        gainExperience(PointConst.ATTENDANCE_POINT);
-        point += PointConst.ATTENDANCE_POINT;
-    }
-
-    /**
-     * 운동하기 포인트 증가
-     */
-    public void exercisePoint(){
-        gainExperience(PointConst.EXERCISE_POINT);
-        point += PointConst.EXERCISE_POINT;
-    }
-
-    /**
-     * 코멘트 달기 포인트 감소
-     */
-    public void requestComment(){
-        if(point < PointConst.COMMENT_POINT){
-            throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
-        }
-        point -= PointConst.COMMENT_POINT;
-    }
+//    /**
+//     * 출석 포인트 증가
+//     */
+//    public void attendancePoint(){
+//        gainExperience(PointConst.ATTENDANCE_POINT);
+//        point += PointConst.ATTENDANCE_POINT;
+//    }
+//
+//    /**
+//     * 운동하기 포인트 증가
+//     */
+//    public void exercisePoint(){
+//        gainExperience(PointConst.EXERCISE_POINT);
+//        point += PointConst.EXERCISE_POINT;
+//    }
+//
+//    /**
+//     * 코멘트 달기 포인트 감소
+//     */
+//    public void requestComment(){
+//        if(point < PointConst.COMMENT_POINT){
+//            throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
+//        }
+//        point -= PointConst.COMMENT_POINT;
+//    }
 
     /**
      * 레포트 신청하기
@@ -124,34 +130,43 @@ public class Member {
     /**
      * 구독하기
      */
-    public void subscribe(LocalDateTime startDate, LocalDateTime endDate){
+    public Long subscribe(LocalDateTime startDate, LocalDateTime endDate){
         if (this.subscription != null && Boolean.TRUE.equals(this.subscription.getStatus())) {
             throw new IllegalStateException("이미 구독 중입니다.");
         }
         this.subscription = Subscription.createSubscription(this, startDate, endDate);
+        this.subscribed = true;
+        return subscription.getId();
     }
     /**
-     * 구독해지
+     * 구독 해지
      */
-    public void unsubscribe(){
-        if (this.subscription == null) {
-            throw new IllegalStateException("구독 정보가 없습니다.");
+    public void cancelSubscription() {
+        if (this.subscription == null || this.subscribed == false) {
+            throw new IllegalStateException("구독한 내역이 없습니다.");
         }
-        subscription.unsubscribe();
+        this.subscription.unsubscribe();
+        this.subscribed = false;
+//        this.subscription = null;
     }
 
     /**
-     * 닉네임 변경
+     * 구독 연장
      */
-    public void changeNickName(String nickName){
-        this.nickName = nickName;
+    public Long extendSubscription(LocalDateTime endDate) {
+        if (this.subscription == null || this.subscribed == false) {
+            throw new IllegalStateException("구독한 내역이 없습니다.");
+        }
+        this.subscription.continueSubscription(endDate);
+        return this.subscription.getId();
     }
 
     /**
-     * 프로필 변경
+     * 프로필 & 닉네임 변경
      */
-    public void changeProfile(String name, String phone, String birth){
+    public void changeProfile(String name, String phone, String birth, String nickName){
         profile.changeProfile(name, phone, birth);
+        this.nickName = nickName;
 
     }
 

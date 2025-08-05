@@ -8,7 +8,7 @@ import lombok.*;
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserProfile {
+public class MemberProfile {
     @Column(nullable = false)
     private String username;
 
@@ -34,7 +34,7 @@ public class UserProfile {
     }
 
     @Builder
-    public UserProfile(String username, String password, String birth, String phone, String name, Role role){
+    public MemberProfile(String username, String password, String birth, String phone, String name, Role role){
         this.username = username;
         this.password = password;
         this.birth = birth;

@@ -1,7 +1,7 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.user.request.CreateUserProfileRequest;
-import hello.squadfit.api.user.request.LoginRequest;
+import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
+import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.entity.Member;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -22,16 +22,16 @@ class MemberServiceTest {
 
     @Test
     public void register(){
-        CreateUserProfileRequest createUserProfileRequest =
-                new CreateUserProfileRequest(
+        CreateMemberProfileRequest createMemberProfileRequest =
+                new CreateMemberProfileRequest(
                         "test","1234","991111"
                         ,"010-1234-5678","jaewoo","yang");
 
-        Long userId = userService.register(createUserProfileRequest);
+        Long userId = userService.register(createMemberProfileRequest);
         Optional<Member> user = userService.findOne(userId);
         Member findMember = user.orElse(null);
 
-        assertThat(findMember.getNickName()).isEqualTo(createUserProfileRequest.getNickName());
+        assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());
 
     }
 
