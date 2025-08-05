@@ -1,4 +1,4 @@
-package hello.squadfit.api.user.response;
+package hello.squadfit.api.Member.response;
 
 import hello.squadfit.domain.record.ExerciseCategory;
 import lombok.Builder;

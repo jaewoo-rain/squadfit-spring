@@ -1,11 +1,11 @@
 package hello.squadfit.domain.member.dto;
 
-import hello.squadfit.domain.member.entity.UserProfile;
+import hello.squadfit.domain.member.entity.MemberProfile;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter @AllArgsConstructor
 public class CreateUserDto {
-    private UserProfile profile;
+    private MemberProfile profile;
     private String nickName;
 }

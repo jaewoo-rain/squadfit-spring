@@ -1,4 +1,4 @@
-package hello.squadfit.api.user.request;
+package hello.squadfit.api.Member.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

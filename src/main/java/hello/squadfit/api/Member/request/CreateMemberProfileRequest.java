@@ -1,4 +1,4 @@
-package hello.squadfit.api.user.request;
+package hello.squadfit.api.Member.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
-public class CreateUserProfileRequest {
+public class CreateMemberProfileRequest {
 
     @NotBlank
     private String username;

@@ -14,13 +14,13 @@ public class Trainer {
     private Long id;
 
     @Embedded
-    private UserProfile profile;
+    private MemberProfile profile;
 
 //    private List<Comment> comments;
 //    private List<Report> reports;
 
     // == 생성 메서드 == //
-    public static Trainer createTrainer(UserProfile profile){
+    public static Trainer createTrainer(MemberProfile profile){
         Trainer trainer = new Trainer();
         trainer.profile = profile;
         return trainer;

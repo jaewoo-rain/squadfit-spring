@@ -1,4 +1,4 @@
-package hello.squadfit.api.user.response;
+package hello.squadfit.api.Member.response;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ public class LoginResponse {
     private String nickName;
     private Integer level;
     private Integer requiredExperience; // 잔여 경험치
-    private Integer point;
+//    private Integer point;
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
 }

@@ -1,15 +1,15 @@
 package hello.squadfit.domain.record.service;
 
 import hello.squadfit.api.record.request.SaveRecordRequest;
-import hello.squadfit.api.user.response.AllRecordResponse;
-import hello.squadfit.api.user.response.SingleRecordResponse;
+import hello.squadfit.api.Member.response.AllRecordResponse;
+import hello.squadfit.api.Member.response.SingleRecordResponse;
 import hello.squadfit.domain.record.dto.CreateRecordDto;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import hello.squadfit.domain.record.repository.RecordRepository;
 import hello.squadfit.domain.member.entity.Member;
-import hello.squadfit.domain.member.repository.UserRepository;
+import hello.squadfit.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +21,12 @@ import java.util.Optional;
 public class RecordService {
 
     private final RecordRepository recordRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
 
     public Long save(SaveRecordRequest request){
 
-        Member member = userRepository.findById(request.getUserId())
+        Member member = memberRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalStateException("유저 맞아?"));
 
         ExerciseType exerciseType = exerciseTypeRepository.findById(request.getExerciseTypeId())
