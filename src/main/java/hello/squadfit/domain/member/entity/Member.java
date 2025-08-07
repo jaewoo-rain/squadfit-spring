@@ -39,18 +39,15 @@ public class Member {
 
     private Boolean subscribed; // 구독 여부
 
+    private Integer point;
+
 
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
     // == 연관관계 == //
-    @OneToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "subscription_id")
+    @OneToOne(mappedBy = "member", fetch = LAZY,cascade = ALL)
     private Subscription subscription;
-
-    @OneToMany(mappedBy = "member", cascade = ALL)
-    @Column(nullable = false)
-    private List<Point> point = new ArrayList<>();
 
 //    private List<Notification> notifications = new ArrayList<>();
 
@@ -72,7 +69,7 @@ public class Member {
     // == 연관관계 편의 메서드 == //
     public void linkSubscription(Subscription subscription) {
         this.subscription = subscription;
-        this.subscription.linkedMember(this);
+        this.subscription.linkMember(this);
     }
 
 
@@ -84,38 +81,40 @@ public class Member {
         member.level = 1;
         member.requiredExperience = 100;
         member.subscription = null;
-//        member.point = 0;
+        member.point = 0;
         member.availableReportCount = 0;
         member.subscribed = false;
         return member;
     }
 
     // == 비즈니스 로직 == //
-//    /**
-//     * 출석 포인트 증가
-//     */
-//    public void attendancePoint(){
-//        gainExperience(PointConst.ATTENDANCE_POINT);
-//        point += PointConst.ATTENDANCE_POINT;
-//    }
-//
-//    /**
-//     * 운동하기 포인트 증가
-//     */
-//    public void exercisePoint(){
-//        gainExperience(PointConst.EXERCISE_POINT);
-//        point += PointConst.EXERCISE_POINT;
-//    }
-//
-//    /**
-//     * 코멘트 달기 포인트 감소
-//     */
-//    public void requestComment(){
-//        if(point < PointConst.COMMENT_POINT){
-//            throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
-//        }
-//        point -= PointConst.COMMENT_POINT;
-//    }
+    /**
+     * 출석 포인트 증가
+     */
+    public void attendancePoint(){
+        gainExperience(PointConst.ATTENDANCE_POINT);
+        point += PointConst.ATTENDANCE_POINT;
+
+    }
+
+    /**
+     * 운동하기 포인트 증가
+     */
+    public void exercisePoint(){
+        gainExperience(PointConst.EXERCISE_POINT);
+        this.point += PointConst.EXERCISE_POINT;
+        System.out.println("포인트 증가");
+    }
+
+    /**
+     * 코멘트 달기 포인트 감소
+     */
+    public void requestComment(){
+        if(point < PointConst.COMMENT_POINT){
+            throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
+        }
+        point -= PointConst.COMMENT_POINT;
+    }
 
     /**
      * 레포트 신청하기
@@ -136,6 +135,7 @@ public class Member {
         }
         this.subscription = Subscription.createSubscription(this, startDate, endDate);
         this.subscribed = true;
+        this.linkSubscription(subscription);
         return subscription.getId();
     }
     /**
@@ -147,7 +147,7 @@ public class Member {
         }
         this.subscription.unsubscribe();
         this.subscribed = false;
-//        this.subscription = null;
+        this.subscription = null;
     }
 
     /**
@@ -165,6 +165,7 @@ public class Member {
      * 프로필 & 닉네임 변경
      */
     public void changeProfile(String name, String phone, String birth, String nickName){
+        if (profile == null) throw new IllegalStateException("Profile 정보가 없습니다.");
         profile.changeProfile(name, phone, birth);
         this.nickName = nickName;
 
@@ -172,6 +173,7 @@ public class Member {
 
     // 경험치 획득
     private void gainExperience(Integer exp){
+        if (exp <= 0) throw new IllegalArgumentException("경험치는 양수여야 합니다.");
 
         int remainExp = requiredExperience - exp;
         if(remainExp <= 0){

@@ -5,10 +5,9 @@ import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,9 +18,18 @@ public class ExerciseTypeController {
 
     @PostMapping
     public Long saveExercise(@RequestBody ExerciseDto exerciseDto){
-        ExerciseType exerciseType = ExerciseType.createExerciseType(exerciseDto.getExerciseName(), exerciseDto.getCategory());
-        ExerciseType type = exerciseTypeRepository.save(exerciseType);
-        return type.getId();
+        return exerciseTypeRepository.findByName(exerciseDto.getExerciseName())
+                .map(exerciseType -> exerciseType.getId())
+                .orElseGet(() -> {
+                    ExerciseType newType = ExerciseType.createExerciseType(exerciseDto.getExerciseName(), exerciseDto.getCategory());
+                    return exerciseTypeRepository.save(newType).getId();
+                });
+    }
+
+    @GetMapping("{exerciseName}")
+    public Long findExerciseType(@PathVariable String exerciseName){
+        ExerciseType exerciseType = exerciseTypeRepository.findByName(exerciseName).orElseThrow(() -> new RuntimeException("운동이름 잘못됐는데?"));
+        return exerciseType.getId();
     }
 
     @Getter
