@@ -2,13 +2,11 @@ package hello.squadfit.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.*;
 
 @Entity
@@ -23,10 +21,11 @@ public class Subscription {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private Integer count; // 연장횟수
-    private Long memberId; // 구독 내역 확인을 위한 멤버
+//    private Long memberId; // 구독 내역 확인을 위한 멤버
 
     // == 연관관계 == //
-    @OneToOne(mappedBy = "subscription", fetch = LAZY)
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
 
@@ -36,14 +35,15 @@ public class Subscription {
         subscription.status = true;
         subscription.startDate = startDate;
         subscription.endDate = endDate;
-        member.linkSubscription(subscription);
+//        member.linkSubscription(subscription);
+//        subscription.member = member;
         subscription.count = 0;
-        subscription.memberId = member.getId();
+//        subscription.memberId = member.getId();
         return subscription;
     }
 
     // == 비즈니스 로직 == //
-    public void linkedMember(Member member){
+    public void linkMember(Member member){
         this.member = member;
     }
 
@@ -55,6 +55,7 @@ public class Subscription {
             throw new IllegalStateException("구독한적이 없습니다.");
         }
         this.status = false;
+        this.member = null;
     }
 
     /**

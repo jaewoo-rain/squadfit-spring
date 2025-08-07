@@ -12,27 +12,32 @@ import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RecordService {
 
     private final RecordRepository recordRepository;
     private final MemberRepository memberRepository;
     private final ExerciseTypeRepository exerciseTypeRepository;
 
+    // 기록 저장하기
+    @Transactional
     public Long save(SaveRecordRequest request){
 
+        // 유효성 검사
         Member member = memberRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalStateException("유저 맞아?"));
 
         ExerciseType exerciseType = exerciseTypeRepository.findById(request.getExerciseTypeId())
                 .orElseThrow(() -> new IllegalStateException("유저 종목 없는데?"));
 
-
+        // DTO 변경
         CreateRecordDto createRecordDto = CreateRecordDto.builder()
                 .member(member)
                 .repeat(request.getRepeatNumber())
@@ -46,25 +51,17 @@ public class RecordService {
 
         ExerciseRecord record = recordRepository.save(exerciseRecord);
 
+        // 포인트 증가
+        member.exercisePoint();
+
         return record.getId();
 
     }
 
     // 전체 기록 조회
+    // TODO: 페이징 처리하기
     public AllRecordResponse findAll(Long userId) {
         List<ExerciseRecord> all = recordRepository.findAllByMemberId(userId);
-//        List<AllRecordResponse> result = all.stream().map(m ->
-//                        AllRecordResponse.builder()
-//                                .exerciseRecordId(m.getId())
-//                                .exerciseName(m.getExerciseType().getName())
-//                                .weight(m.getWeight())
-//                                .repeatNumber(m.getRepeat())
-//                                .volume(m.getWeight() * m.getRepeat())
-//                                .successNumber(m.getSuccessNumber())
-//                                .failNumber(m.getFailNumber())
-//                                .category(m.getExerciseType().getCategory())
-//                                .build())
-//                .toList();
 
         List<SingleRecordResponse> list = all.stream().map(m -> SingleRecordResponse.builder()
                 .exerciseRecordId(m.getId())
@@ -100,6 +97,7 @@ public class RecordService {
     }
 
     // 기록 삭제
+    @Transactional
     public Long remove(Long exerciseId) {
         recordRepository.deleteById(exerciseId);
         return exerciseId;
