@@ -12,6 +12,7 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// 구독
 public class Subscription {
     @Id @GeneratedValue
     @Column(name = "subscription_id")

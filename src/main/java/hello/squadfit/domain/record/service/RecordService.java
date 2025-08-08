@@ -1,5 +1,6 @@
 package hello.squadfit.domain.record.service;
 
+import hello.squadfit.api.Member.response.mapper.SingleRecordResponseMapper;
 import hello.squadfit.api.record.request.SaveRecordRequest;
 import hello.squadfit.api.Member.response.AllRecordResponse;
 import hello.squadfit.api.Member.response.SingleRecordResponse;
@@ -52,7 +53,7 @@ public class RecordService {
         ExerciseRecord record = recordRepository.save(exerciseRecord);
 
         // 포인트 증가
-        member.exercisePoint();
+        member.increaseExercisePoint();
 
         return record.getId();
 
@@ -63,16 +64,8 @@ public class RecordService {
     public AllRecordResponse findAll(Long userId) {
         List<ExerciseRecord> all = recordRepository.findAllByMemberId(userId);
 
-        List<SingleRecordResponse> list = all.stream().map(m -> SingleRecordResponse.builder()
-                .exerciseRecordId(m.getId())
-                .exerciseName(m.getExerciseType().getName())
-                .weight(m.getWeight())
-                .repeatNumber(m.getRepeat())
-                .volume(m.getWeight() * m.getRepeat())
-                .successNumber(m.getSuccessNumber())
-                .failNumber(m.getFailNumber())
-                .category(m.getExerciseType().getCategory())
-                .build()).toList();
+        List<SingleRecordResponse> list = all.stream()
+                .map(record -> SingleRecordResponseMapper.entityToDto(record)).toList();
 
         return new AllRecordResponse(list);
     }
@@ -81,17 +74,8 @@ public class RecordService {
     public Optional<SingleRecordResponse> findOne(Long memberId, Long exerciseId) {
         Optional<ExerciseRecord> findRecord = recordRepository.findByMemberIdAndId(memberId, exerciseId);
 
-        Optional<SingleRecordResponse> result = findRecord.map(record -> SingleRecordResponse.builder()
-                .exerciseRecordId(record.getId())
-                .exerciseName(record.getExerciseType().getName())
-                .weight(record.getWeight())
-                .repeatNumber(record.getRepeat())
-                .volume(record.getWeight() * record.getRepeat())
-                .successNumber(record.getSuccessNumber())
-                .failNumber(record.getFailNumber())
-                .category(record.getExerciseType().getCategory())
-                .build()
-        );
+        Optional<SingleRecordResponse> result = findRecord
+                .map(record -> SingleRecordResponseMapper.entityToDto(record));
 
         return result;
     }

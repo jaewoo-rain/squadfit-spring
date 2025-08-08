@@ -3,11 +3,14 @@ package hello.squadfit.domain.member.entity;
 import hello.squadfit.domain.member.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Embeddable
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+// 바귀지 않는 member, trainer 정보
 public class MemberProfile {
     @Column(nullable = false)
     private String username;
@@ -25,6 +28,7 @@ public class MemberProfile {
     private String name;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public void changeProfile(String name, String phone, String birth){

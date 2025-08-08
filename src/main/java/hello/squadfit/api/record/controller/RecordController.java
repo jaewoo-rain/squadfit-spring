@@ -4,7 +4,7 @@ import hello.squadfit.api.record.request.SaveRecordRequest;
 import hello.squadfit.api.Member.response.AllRecordResponse;
 import hello.squadfit.api.Member.response.SingleRecordResponse;
 import hello.squadfit.domain.record.service.RecordService;
-import hello.squadfit.domain.member.service.UserService;
+import hello.squadfit.domain.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,13 @@ import java.util.Optional;
 public class RecordController {
 
     private final RecordService recordService;
-    private final UserService userService;
+    private final MemberService memberService;
 
     @Operation(summary = "운동 기록 저장")
     @PostMapping
     public ResponseEntity<Long> saveRecord(@Valid @RequestBody SaveRecordRequest request, BindingResult bindingResult){
 
-        if(!userService.existsMember(request.getUserId())){
+        if(!memberService.existsMember(request.getUserId())){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -54,7 +54,7 @@ public class RecordController {
     @Operation(summary = "유저 운동 기록 전체 조회")
     @GetMapping("/all/{memberId}")
     public ResponseEntity<AllRecordResponse> findAllRecord(@PathVariable Long memberId){
-        if(!userService.existsMember(memberId)){
+        if(!memberService.existsMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -68,7 +68,7 @@ public class RecordController {
     @GetMapping("/single/{memberId}/{exerciseId}")
     public ResponseEntity<Optional<SingleRecordResponse>> findOneRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
 
-        if(!userService.existsMember(memberId)){
+        if(!memberService.existsMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -80,7 +80,7 @@ public class RecordController {
     @DeleteMapping("/{memberId}/{exerciseId}")
     public ResponseEntity<Long> deleteRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
 
-        if(!userService.existsMember(memberId)){
+        if(!memberService.existsMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
