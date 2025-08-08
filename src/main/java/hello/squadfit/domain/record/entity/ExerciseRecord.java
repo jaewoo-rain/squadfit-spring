@@ -1,7 +1,7 @@
 package hello.squadfit.domain.record.entity;
 
-import hello.squadfit.domain.record.dto.CreateRecordDto;
 import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.record.dto.CreateRecordDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity @Getter

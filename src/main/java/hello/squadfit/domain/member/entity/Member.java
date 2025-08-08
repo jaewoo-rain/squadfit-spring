@@ -18,7 +18,7 @@ import static jakarta.persistence.FetchType.*;
 //@Builder // 나중에 도입하자
 //@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder때문에 사용해야함, 생성자 외부에서 못만들도록 하기 위해
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 protected로 설정하여 기본생성자 사용못하게 막기
-@Table(name = "member")
+// 바뀌는 member 정보
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,16 +49,17 @@ public class Member {
     @OneToOne(mappedBy = "member", fetch = LAZY,cascade = ALL)
     private Subscription subscription;
 
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<Attendance> attendances = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 user 필드를 참조함
+    private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
+
 //    private List<Notification> notifications = new ArrayList<>();
 
 //    private List<Payment> payments = new ArrayList<>();
 
-//    private List<Attendance> attendances = new ArrayList<>();
-
 //    private List<BestRecord> bestRecords = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 user 필드를 참조함
-    private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
 
 //    private List<Video> videos = new ArrayList<>();
 
@@ -91,7 +92,7 @@ public class Member {
     /**
      * 출석 포인트 증가
      */
-    public void attendancePoint(){
+    public void increaseAttendancePoint(){
         gainExperience(PointConst.ATTENDANCE_POINT);
         point += PointConst.ATTENDANCE_POINT;
 
@@ -100,7 +101,7 @@ public class Member {
     /**
      * 운동하기 포인트 증가
      */
-    public void exercisePoint(){
+    public void increaseExercisePoint(){
         gainExperience(PointConst.EXERCISE_POINT);
         this.point += PointConst.EXERCISE_POINT;
         System.out.println("포인트 증가");
@@ -109,7 +110,7 @@ public class Member {
     /**
      * 코멘트 달기 포인트 감소
      */
-    public void requestComment(){
+    public void decreaseCommentPoint(){
         if(point < PointConst.COMMENT_POINT){
             throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
         }
@@ -119,7 +120,7 @@ public class Member {
     /**
      * 레포트 신청하기
      */
-    public void requestReport() {
+    public void decreaseRequestReportPoint() {
         if (availableReportCount <= 0) {
             throw new IllegalStateException("신청 가능한 레포트 수가 없습니다.");
         }

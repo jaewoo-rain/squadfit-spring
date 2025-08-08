@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/squadfit
+    url: jdbc:h2:tcp://localhost/~/db/squadfit
     username: sa
     password:
     driver-class-name: org.h2.Driver

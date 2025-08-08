@@ -4,7 +4,7 @@ import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.api.Member.response.LoginResponse;
 import hello.squadfit.domain.member.entity.Member;
-import hello.squadfit.domain.member.service.UserService;
+import hello.squadfit.domain.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/users")
 public class MemberController {
 
-    private final UserService userService;
+    private final MemberService memberService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
@@ -30,7 +30,7 @@ public class MemberController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
 
-        Member loginMember = userService.login(request);
+        Member loginMember = memberService.login(request);
         LoginResponse result = LoginResponse.builder()
                 .level(loginMember.getLevel())
 //                .point(loginMember.getPoint())
@@ -48,7 +48,7 @@ public class MemberController {
             log.info("회원가입 오류 = {}", bindingResult);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
-        Long userId = userService.register(request);
+        Long userId = memberService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
 
     }
