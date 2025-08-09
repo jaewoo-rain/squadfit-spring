@@ -1,6 +1,7 @@
 package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.domain.member.Role;
+import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
@@ -31,20 +32,20 @@ public class MemberProfile {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void changeProfile(String name, String phone, String birth){
-        this.birth = birth;
-        this.phone = phone;
-        this.name = name;
+    public void changeProfile(ChangeProfileDto changeProfileDto){
+        this.birth = changeProfileDto.getBirth();
+        this.phone = changeProfileDto.getPhone();
+        this.name = changeProfileDto.getName();
     }
 
-    @Builder
-    public MemberProfile(String username, String password, String birth, String phone, String name, Role role){
-        this.username = username;
-        this.password = password;
-        this.birth = birth;
-        this.phone = phone;
-        this.name = name;
-        this.role = role;
-    }
+//    @Builder
+//    public MemberProfile(String username, String password, String birth, String phone, String name, Role role){
+//        this.username = username;
+//        this.password = password;
+//        this.birth = birth;
+//        this.phone = phone;
+//        this.name = name;
+//        this.role = role;
+//    }
 
 }

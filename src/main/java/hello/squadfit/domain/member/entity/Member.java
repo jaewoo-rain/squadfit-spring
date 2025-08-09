@@ -1,6 +1,7 @@
 package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.domain.PointConst;
+import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateUserDto;
 import hello.squadfit.domain.video.entity.Video;
@@ -171,8 +172,12 @@ public class Member {
      * 프로필 & 닉네임 변경
      */
     public void changeProfile(String name, String phone, String birth, String nickName){
-        if (profile == null) throw new IllegalStateException("Profile 정보가 없습니다.");
-        profile.changeProfile(name, phone, birth);
+        profile.changeProfile(ChangeProfileDto.builder()
+                        .birth(birth)
+                        .phone(phone)
+                        .name(name)
+                        .build()
+        );
         this.nickName = nickName;
 
     }
