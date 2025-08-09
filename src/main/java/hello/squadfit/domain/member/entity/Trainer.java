@@ -1,8 +1,13 @@
 package hello.squadfit.domain.member.entity;
 
+import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Entity
 @Table(name = "trainers")
@@ -16,7 +21,8 @@ public class Trainer {
     @Embedded
     private MemberProfile profile;
 
-//    private List<Comment> comments;
+    @OneToMany(mappedBy = "trainer", cascade = ALL)
+    private List<Comment> comments;
 //    private List<Report> reports;
 
     // == 생성 메서드 == //
@@ -33,4 +39,5 @@ public class Trainer {
     public void changeProfile(String name, String phone, String birth){
         profile.changeProfile(name, phone, birth);
     }
+
 }

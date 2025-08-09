@@ -11,7 +11,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
 
 @Entity @Getter
@@ -46,6 +49,9 @@ public class Video {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "video", cascade = ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     // todo: 나중에 레포트 만들때 생성
 //    @OneToMany
