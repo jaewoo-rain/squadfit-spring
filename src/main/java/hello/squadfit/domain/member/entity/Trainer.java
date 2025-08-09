@@ -5,13 +5,14 @@ import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
 
-@Entity
+@Entity @Getter
 @Table(name = "trainer")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Trainer {
@@ -33,9 +34,11 @@ public class Trainer {
     private List<Report> reports;
 
     // == 생성 메서드 == //
-    public static Trainer createTrainer(MemberProfile profile){
+    public static Trainer create(MemberProfile profile, String place){
         Trainer trainer = new Trainer();
         trainer.profile = profile;
+        trainer.place = place;
+
         return trainer;
     }
 

@@ -3,7 +3,7 @@ package hello.squadfit.domain.member.service;
 import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.Role;
-import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.MemberProfile;
 import hello.squadfit.domain.member.repository.MemberRepository;
@@ -34,18 +34,18 @@ public class MemberService {
                 .birth(request.getBirth())
                 .build();
 
-        Optional<Member> findUser = memberRepository.findByProfileUsername(profile.getUsername());
-        if(!findUser.isEmpty()){
+        Optional<Member> findMember = memberRepository.findByProfileUsername(profile.getUsername());
+        if(!findMember.isEmpty()){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
-        Member member = Member.createUser(new CreateUserDto(profile, request.getNickName()));
+        Member member = Member.create(new CreateMemberDto(profile, request.getNickName()));
         Member save = memberRepository.save(member);
         return save.getId();
     }
 
-    public Optional<Member> findOne(Long userId){
-        return memberRepository.findById(userId);
+    public Optional<Member> findOne(Long memberId){
+        return memberRepository.findById(memberId);
     }
 
     public Member login(LoginRequest loginRequest) {
@@ -62,8 +62,8 @@ public class MemberService {
     }
 
     // 유저 존재하는지 확인
-    public boolean existsMember(Long userId){
-        return memberRepository.existsMemberById(userId);
+    public boolean existsMember(Long memberId){
+        return memberRepository.existsMemberById(memberId);
     }
 
 

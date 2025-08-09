@@ -36,7 +36,7 @@ public class ExerciseRecord {
     @JoinColumn(name = "exercise_type_id")
     private ExerciseType exerciseType;
 
-    @OneToOne(mappedBy = "record")
+    @OneToOne(fetch = LAZY, mappedBy = "record")
     private Video video;
 
     // == 연관관계 편의 메서드 == //

@@ -29,7 +29,7 @@ public class RecordController {
     @PostMapping
     public ResponseEntity<Long> saveRecord(@Valid @RequestBody SaveRecordRequest request, BindingResult bindingResult){
 
-        if(!memberService.existsMember(request.getUserId())){
+        if(!memberService.existsMember(request.getMemberId())){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -58,6 +58,7 @@ public class RecordController {
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
+        // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
         AllRecordResponse result = recordService.findAll(memberId);
 
         return ResponseEntity.ok(result); // 없으면 null
@@ -72,6 +73,7 @@ public class RecordController {
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
+        // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
         Optional<SingleRecordResponse> result = recordService.findOne(memberId, exerciseId);
 
         return ResponseEntity.ok(result); // 없으면 nul 처리

@@ -32,7 +32,7 @@ public class RecordService {
     public Long save(SaveRecordRequest request){
 
         // 유효성 검사
-        Member member = memberRepository.findById(request.getUserId())
+        Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new IllegalStateException("유저 맞아?"));
 
         ExerciseType exerciseType = exerciseTypeRepository.findById(request.getExerciseTypeId())
@@ -61,8 +61,8 @@ public class RecordService {
 
     // 전체 기록 조회
     // TODO: 페이징 처리하기
-    public AllRecordResponse findAll(Long userId) {
-        List<ExerciseRecord> all = recordRepository.findAllByMemberId(userId);
+    public AllRecordResponse findAll(Long memberId) {
+        List<ExerciseRecord> all = recordRepository.findAllByMemberId(memberId);
 
         List<SingleRecordResponse> list = all.stream()
                 .map(record -> SingleRecordResponseMapper.entityToDto(record)).toList();

@@ -3,7 +3,7 @@ package hello.squadfit.domain.member.entity;
 import hello.squadfit.domain.PointConst;
 import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
-import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,7 +54,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Attendance> attendances = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 user 필드를 참조함
+    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 member 필드를 참조함
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL)
@@ -81,7 +81,7 @@ public class Member {
 
 
     // == 생성 메서드 == //
-    public static Member createUser(CreateUserDto dto){
+    public static Member create(CreateMemberDto dto){
         Member member = new Member();
         member.profile = dto.getProfile();
         member.nickName = dto.getNickName();

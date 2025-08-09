@@ -28,9 +28,9 @@ class MemberServiceTest {
                         "test","1234","991111"
                         ,"010-1234-5678","jaewoo","yang");
 
-        Long userId = memberService.register(createMemberProfileRequest);
-        Optional<Member> user = memberService.findOne(userId);
-        Member findMember = user.orElse(null);
+        Long memberId = memberService.register(createMemberProfileRequest);
+        Optional<Member> member = memberService.findOne(memberId);
+        Member findMember = member.orElse(null);
 
         assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());
 
@@ -40,10 +40,10 @@ class MemberServiceTest {
     public void login(){
 
         LoginRequest loginRequest = new LoginRequest("test", "1234");
-        Member user = memberService.login(loginRequest);
+        Member member = memberService.login(loginRequest);
 
-        assertThat(user.getProfile().getUsername()).isEqualTo(loginRequest.getUsername());
-        assertThat(user.getProfile().getPassword()).isEqualTo(loginRequest.getPassword());
+        assertThat(member.getProfile().getUsername()).isEqualTo(loginRequest.getUsername());
+        assertThat(member.getProfile().getPassword()).isEqualTo(loginRequest.getPassword());
 
     }
   

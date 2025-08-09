@@ -36,7 +36,7 @@ public class Video {
     private String title;
 
     @Column(nullable = false, length = 500)
-    private String key; // 저장 장소
+    private String saveKey; // 저장 장소
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -79,7 +79,7 @@ public class Video {
     public static Video create(Member member, ExerciseRecord record, SaveVideoDto dto){
         Video video = new Video();
         video.title = dto.getTitle();
-        video.key = dto.getKey();
+        video.saveKey = dto.getKey();
         video.visibility = dto.getVisibility();
         video.addMember(member);
         video.addRecord(record);

@@ -9,7 +9,7 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 
 @Embeddable
-@Getter
+@Getter @Builder @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 바귀지 않는 member, trainer 정보
 public class MemberProfile {
