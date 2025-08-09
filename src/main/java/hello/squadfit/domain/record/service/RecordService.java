@@ -71,13 +71,17 @@ public class RecordService {
     }
 
     // 단일 기록 조회
-    public Optional<SingleRecordResponse> findOne(Long memberId, Long exerciseId) {
-        Optional<ExerciseRecord> findRecord = recordRepository.findByMemberIdAndId(memberId, exerciseId);
+    public Optional<SingleRecordResponse> findOne(Long memberId, Long recordId) {
+        Optional<ExerciseRecord> findRecord = recordRepository.findByMemberIdAndId(memberId, recordId);
 
         Optional<SingleRecordResponse> result = findRecord
                 .map(record -> SingleRecordResponseMapper.entityToDto(record));
 
         return result;
+    }
+
+    public Optional<ExerciseRecord> getRecord(Long recordId){
+        return recordRepository.findById(recordId);
     }
 
     // 기록 삭제

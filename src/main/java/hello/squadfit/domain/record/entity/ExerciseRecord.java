@@ -2,6 +2,7 @@ package hello.squadfit.domain.record.entity;
 
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.record.dto.CreateRecordDto;
+import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,24 +21,32 @@ public class ExerciseRecord {
     @Column(name = "record_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id") // FK 이름
-    private Member member;
-
     private LocalDateTime recordDate;
     private Integer repeat;
     private Integer weight;
     private Integer successNumber;
     private Integer failNumber;
 
+    // == 연관관계 == //
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id") // FK 이름
+    private Member member;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "exercise_type_id")
     private ExerciseType exerciseType;
+
+    @OneToOne(mappedBy = "record")
+    private Video video;
 
     // == 연관관계 편의 메서드 == //
     private void setMember(Member member){
         this.member = member;
         member.getExerciseRecords().add(this);
+    }
+
+    public void linkVideo(Video video){
+        this.video = video;
     }
 
     // == 생성 메서드 == //

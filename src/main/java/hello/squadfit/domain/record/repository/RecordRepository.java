@@ -10,5 +10,5 @@ public interface RecordRepository extends JpaRepository<ExerciseRecord, Long> {
 
     List<ExerciseRecord> findAllByMemberId(Long userId);
 
-    Optional<ExerciseRecord> findByMemberIdAndId(Long memberId, Long exerciseId);
+    Optional<ExerciseRecord> findByMemberIdAndId(Long memberId, Long recordID);
 }
