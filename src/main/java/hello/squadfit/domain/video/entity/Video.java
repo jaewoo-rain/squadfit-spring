@@ -1,4 +1,96 @@
 package hello.squadfit.domain.video.entity;
 
+import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.record.entity.ExerciseRecord;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.FetchType.*;
+
+@Entity @Getter
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@Table(
+//        name = "video",
+//        uniqueConstraints = {
+//                @UniqueConstraint(name = "uk_video_record", columnNames = "record_id")
+//        }
+//)
 public class Video {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "video_id")
+    private Long id;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false, length = 500)
+    private String key; // 저장 장소
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private VideoVisibility visibility; // PUBLIC, PRIVATE
+
+    // == 연관관계 == //
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "record_id", unique = true, nullable = false)
+    private ExerciseRecord record;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    // todo: 나중에 레포트 만들때 생성
+//    @OneToMany
+//    private VideoReport videoReport;
+
+    // == 연관관계 편의메서드 == //
+    public void addMember(Member member){
+        this.member = member;
+        member.getVideos().add(this);
+    }
+
+    public void addRecord(ExerciseRecord record){
+        this.record = record;
+        // 역방향 세팅 (반대편에서 재귀 호출하지 않도록 주의)
+        if (record.getVideo() != this) {
+            record.linkVideo(this);
+        }
+    }
+
+    // == 생성 메서드 == //
+    public static Video create(Member member, ExerciseRecord record, String title, String key, VideoVisibility visibility){
+        Video video = new Video();
+        video.title = title;
+        video.key = key;
+        video.visibility = visibility;
+        video.addMember(member);
+        video.addRecord(record);
+
+        return video;
+
+    }
+
+    // == 비즈니스 로직 == //
+
+    /**
+     * 동영상 타이틀 변경
+     */
+    public void renameTitle(String title){
+        this.title = title;
+    }
+
+
 }
