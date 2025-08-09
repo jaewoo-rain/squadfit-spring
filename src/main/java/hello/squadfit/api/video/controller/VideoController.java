@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.*;
 public class VideoController {
 
     private final VideoService videoService;
-
-    @PostMapping("/{memberId}/{recordId}")
-    public ResponseEntity<Long> saveByServer(
-            @PathVariable Long memberId,
-            @PathVariable Long recordId,
-            @RequestBody SaveVideoRequest request
-    ){
-        videoService.saveByServer()
-    }
+//
+//    @PostMapping("/{memberId}/{recordId}")
+//    public ResponseEntity<Long> saveByServer(
+//            @PathVariable Long memberId,
+//            @PathVariable Long recordId,
+//            @RequestBody SaveVideoRequest request
+//    ){
+//        videoService.saveByServer();
+//    }
 
 
 }
