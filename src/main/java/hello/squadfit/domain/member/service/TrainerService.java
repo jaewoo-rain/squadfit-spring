@@ -63,6 +63,8 @@ public class TrainerService {
     public Trainer findOneTrainer(Long trainerId){
         return trainerRepository.findById(trainerId).orElseThrow(() -> new RuntimeException("트레이너 없는데요?"));
     }
+    // 트레이너 프로필 변경 todo: 트레이너 정보 추가될테니까 나중에하기
+
 
     // todo:페이징 적용하기
     public List<Trainer> findAllByName(String trainerName) {
@@ -74,4 +76,5 @@ public class TrainerService {
     private boolean trainerExist(String username) {
         return trainerRepository.existsTrainerByProfileUsername(username);
     }
+
 }
