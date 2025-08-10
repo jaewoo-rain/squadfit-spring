@@ -34,8 +34,8 @@ public class MemberService {
                 .birth(request.getBirth())
                 .build();
 
-        Optional<Member> findMember = memberRepository.findByProfileUsername(profile.getUsername());
-        if(!findMember.isEmpty()){
+
+        if(existsMemberByUsername(profile)){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
@@ -62,9 +62,16 @@ public class MemberService {
     }
 
     // 유저 존재하는지 확인
-    public boolean existsMember(Long memberId){
+    public boolean existsMemberByMemberId(Long memberId){
         return memberRepository.existsMemberById(memberId);
     }
+
+    // 아이디로 유저 존재하는지 확인하기
+    private boolean existsMemberByUsername(MemberProfile profile) {
+        return memberRepository.existsByProfileUsername(profile.getUsername());
+    }
+
+
 
 
 }

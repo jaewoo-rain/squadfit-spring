@@ -1,6 +1,7 @@
 package hello.squadfit.domain.member.service;
 
 import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.entity.Subscription;
 import hello.squadfit.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,13 @@ public class SubscriptionService {
     // 연장하기
     public Long extendSubscription(Long memberId){
         Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람이 맞아요?"));
-        LocalDateTime originalEndDate = findMember.getSubscription().getEndDate();
+
+        Subscription subscription = findMember.getSubscription();
+        if (subscription == null) {
+            throw new IllegalStateException("구독 안한거같은데?");
+        }
+        LocalDateTime originalEndDate = subscription.getEndDate();
+
         LocalDateTime endDate = originalEndDate.plusMonths(1);
         Long subscriptionId = findMember.extendSubscription(endDate);
 

@@ -1,9 +1,11 @@
 package hello.squadfit.api;
 
 import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
+import hello.squadfit.api.Member.request.CreateTrainerRequest;
 import hello.squadfit.api.record.request.SaveRecordRequest;
 import hello.squadfit.domain.member.service.AttendanceService;
 import hello.squadfit.domain.member.service.MemberService;
+import hello.squadfit.domain.member.service.TrainerService;
 import hello.squadfit.domain.record.ExerciseCategory;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
@@ -22,6 +24,7 @@ public class InitController {
     private final AttendanceService attendanceService;
     private final RecordService recordService;
     private final MemberService memberService;
+    private final TrainerService trainerService;
 
     @PostConstruct
     public void init (){
@@ -54,6 +57,10 @@ public class InitController {
         attendanceService.attendance(member2Id);
         attendanceService.attendance(member3Id);
 
+        // 트레이너 지정
+        Long trainer1Id = trainerService.register(new CreateTrainerRequest("initTrainer1", "1234", "110000", "010-1234-5678", "trainer1", "서울 체육관"));
+        Long trainer2Id = trainerService.register(new CreateTrainerRequest("initTrainer2", "1234", "220000", "010-1234-5678", "trainer2", "전주 체육관"));
+        Long trainer3Id = trainerService.register(new CreateTrainerRequest("initTrainer3", "1234", "330000", "010-1234-5678", "trainer3", "제주도 체육관"));
 
 
     }

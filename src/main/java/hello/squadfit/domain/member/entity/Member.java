@@ -149,7 +149,7 @@ public class Member {
      * 구독 해지
      */
     public void cancelSubscription() {
-        if (this.subscription == null || this.subscribed == false) {
+        if (isNotExistSubscription()) {
             throw new IllegalStateException("구독한 내역이 없습니다.");
         }
         this.subscription.unsubscribe();
@@ -161,11 +161,18 @@ public class Member {
      * 구독 연장
      */
     public Long extendSubscription(LocalDateTime endDate) {
-        if (this.subscription == null || this.subscribed == false) {
+        if (isNotExistSubscription()) {
             throw new IllegalStateException("구독한 내역이 없습니다.");
         }
         this.subscription.continueSubscription(endDate);
         return this.subscription.getId();
+    }
+
+    /**
+     * 구독 여부 확인
+     */
+    private boolean isNotExistSubscription() {
+        return this.subscription == null || this.subscribed == false;
     }
 
     /**
