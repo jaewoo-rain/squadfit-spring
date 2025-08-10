@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface RecordRepository extends JpaRepository<ExerciseRecord, Long> {
 
-    List<ExerciseRecord> findAllByMemberId(Long userId);
+    List<ExerciseRecord> findAllByMemberId(Long memberId);
 
     Optional<ExerciseRecord> findByMemberIdAndId(Long memberId, Long recordID);
 }

@@ -1,8 +1,9 @@
 package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.domain.PointConst;
+import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
-import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,7 +54,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Attendance> attendances = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 user 필드를 참조함
+    @OneToMany(mappedBy = "member" , cascade = ALL) // record 테이블에 있는 member 필드를 참조함
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = ALL)
@@ -80,7 +81,7 @@ public class Member {
 
 
     // == 생성 메서드 == //
-    public static Member createUser(CreateUserDto dto){
+    public static Member create(CreateMemberDto dto){
         Member member = new Member();
         member.profile = dto.getProfile();
         member.nickName = dto.getNickName();
@@ -148,7 +149,7 @@ public class Member {
      * 구독 해지
      */
     public void cancelSubscription() {
-        if (this.subscription == null || this.subscribed == false) {
+        if (isNotExistSubscription()) {
             throw new IllegalStateException("구독한 내역이 없습니다.");
         }
         this.subscription.unsubscribe();
@@ -160,7 +161,7 @@ public class Member {
      * 구독 연장
      */
     public Long extendSubscription(LocalDateTime endDate) {
-        if (this.subscription == null || this.subscribed == false) {
+        if (isNotExistSubscription()) {
             throw new IllegalStateException("구독한 내역이 없습니다.");
         }
         this.subscription.continueSubscription(endDate);
@@ -168,11 +169,22 @@ public class Member {
     }
 
     /**
+     * 구독 여부 확인
+     */
+    private boolean isNotExistSubscription() {
+        return this.subscription == null || this.subscribed == false;
+    }
+
+    /**
      * 프로필 & 닉네임 변경
      */
     public void changeProfile(String name, String phone, String birth, String nickName){
-        if (profile == null) throw new IllegalStateException("Profile 정보가 없습니다.");
-        profile.changeProfile(name, phone, birth);
+        profile.changeProfile(ChangeProfileDto.builder()
+                        .birth(birth)
+                        .phone(phone)
+                        .name(name)
+                        .build()
+        );
         this.nickName = nickName;
 
     }

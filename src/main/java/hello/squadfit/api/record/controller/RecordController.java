@@ -29,7 +29,7 @@ public class RecordController {
     @PostMapping
     public ResponseEntity<Long> saveRecord(@Valid @RequestBody SaveRecordRequest request, BindingResult bindingResult){
 
-        if(!memberService.existsMember(request.getUserId())){
+        if(notExistMember(request.getMemberId())){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -50,14 +50,16 @@ public class RecordController {
 
         return ResponseEntity.ok(saveId);
     }
-    
+
+
     @Operation(summary = "유저 운동 기록 전체 조회")
     @GetMapping("/all/{memberId}")
     public ResponseEntity<AllRecordResponse> findAllRecord(@PathVariable Long memberId){
-        if(!memberService.existsMember(memberId)){
+        if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
+        // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
         AllRecordResponse result = recordService.findAll(memberId);
 
         return ResponseEntity.ok(result); // 없으면 null
@@ -68,10 +70,11 @@ public class RecordController {
     @GetMapping("/single/{memberId}/{exerciseId}")
     public ResponseEntity<Optional<SingleRecordResponse>> findOneRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
 
-        if(!memberService.existsMember(memberId)){
+        if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
+        // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
         Optional<SingleRecordResponse> result = recordService.findOne(memberId, exerciseId);
 
         return ResponseEntity.ok(result); // 없으면 nul 처리
@@ -80,7 +83,7 @@ public class RecordController {
     @DeleteMapping("/{memberId}/{exerciseId}")
     public ResponseEntity<Long> deleteRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
 
-        if(!memberService.existsMember(memberId)){
+        if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
@@ -92,5 +95,8 @@ public class RecordController {
     // TODO: 유형별 조회
     // TODO: 랭크 조회
 
+    private boolean notExistMember(Long memberId) {
+        return !memberService.existsMemberByMemberId(memberId);
+    }
 
 }

@@ -5,6 +5,7 @@ import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.record.service.RecordService;
+import hello.squadfit.domain.video.dto.SaveVideoDto;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.entity.VideoVisibility;
 import hello.squadfit.domain.video.repository.VideoRepository;
@@ -50,7 +51,14 @@ public class VideoService {
 //        meta.setContentType(file.getContentType());
 //        s3.putObject(new PutObjectRequest(bucket, key, file.getInputStream(), meta));
 
-        Video video = Video.create(findMember, findRecord, saveVideoRequest.getTitle(), key, saveVideoRequest.getVisibility());
+        Video video = Video.create(findMember, findRecord,
+                SaveVideoDto.builder()
+                        .visibility(saveVideoRequest.getVisibility())
+                        .title(saveVideoRequest.getTitle())
+                        .key(key)
+                        .build()
+        );
+
         Video saveVideo = videoRepository.save(video);
 
         return saveVideo.getId();

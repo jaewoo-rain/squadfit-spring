@@ -2,6 +2,8 @@ package hello.squadfit.domain.video.entity;
 
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
+import hello.squadfit.domain.report.entity.VideoReport;
+import hello.squadfit.domain.video.dto.SaveVideoDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,18 +12,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.FetchType.*;
 
 @Entity @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Table(
-//        name = "video",
-//        uniqueConstraints = {
-//                @UniqueConstraint(name = "uk_video_record", columnNames = "record_id")
-//        }
-//)
 public class Video {
 
     @Id
@@ -37,7 +36,7 @@ public class Video {
     private String title;
 
     @Column(nullable = false, length = 500)
-    private String key; // 저장 장소
+    private String saveKey; // 저장 장소
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -51,6 +50,12 @@ public class Video {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToMany(mappedBy = "video", cascade = ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "video", cascade = ALL, orphanRemoval = true)
+    private List<VideoReport> videoReports = new ArrayList<>();
 
     // todo: 나중에 레포트 만들때 생성
 //    @OneToMany
@@ -71,11 +76,11 @@ public class Video {
     }
 
     // == 생성 메서드 == //
-    public static Video create(Member member, ExerciseRecord record, String title, String key, VideoVisibility visibility){
+    public static Video create(Member member, ExerciseRecord record, SaveVideoDto dto){
         Video video = new Video();
-        video.title = title;
-        video.key = key;
-        video.visibility = visibility;
+        video.title = dto.getTitle();
+        video.saveKey = dto.getKey();
+        video.visibility = dto.getVisibility();
         video.addMember(member);
         video.addRecord(record);
 

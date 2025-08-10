@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter @AllArgsConstructor
-public class CreateUserDto {
+public class CreateMemberDto {
     private MemberProfile profile;
     private String nickName;
 }

@@ -25,6 +25,8 @@ public class AttendanceController {
 
     @GetMapping("/{memberId}")
     public ResponseEntity<List<AttendanceResponse>> findByMember(@PathVariable Long memberId){
+
+        // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
         List<AttendanceResponse> result = attendanceService.findAttendanceByMember(memberId);
 
         return ResponseEntity.ok(result);

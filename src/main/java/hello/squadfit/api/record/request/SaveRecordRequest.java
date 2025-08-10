@@ -10,7 +10,7 @@ import lombok.Setter;
 public class SaveRecordRequest {
 
     @NotNull
-    private Long userId;
+    private Long memberId;
     @NotNull
     private Integer weight;
     @NotNull

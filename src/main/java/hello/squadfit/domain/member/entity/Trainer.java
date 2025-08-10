@@ -1,11 +1,19 @@
 package hello.squadfit.domain.member.entity;
 
+import hello.squadfit.domain.member.dto.ChangeProfileDto;
+import hello.squadfit.domain.report.entity.Report;
+import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "trainers")
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
+
+@Entity @Getter
+@Table(name = "trainer")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Trainer {
 
@@ -16,13 +24,21 @@ public class Trainer {
     @Embedded
     private MemberProfile profile;
 
-//    private List<Comment> comments;
-//    private List<Report> reports;
+    @Column
+    private String place; // 체육관 장소
+
+    @OneToMany(mappedBy = "trainer", cascade = ALL)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "trainer", cascade = ALL)
+    private List<Report> reports;
 
     // == 생성 메서드 == //
-    public static Trainer createTrainer(MemberProfile profile){
+    public static Trainer create(MemberProfile profile, String place){
         Trainer trainer = new Trainer();
         trainer.profile = profile;
+        trainer.place = place;
+
         return trainer;
     }
 
@@ -31,6 +47,12 @@ public class Trainer {
      * 프로필 변경
      */
     public void changeProfile(String name, String phone, String birth){
-        profile.changeProfile(name, phone, birth);
+        profile.changeProfile(ChangeProfileDto.builder()
+                        .name(name)
+                        .phone(phone)
+                        .birth(birth)
+                        .build()
+        );
     }
+
 }
