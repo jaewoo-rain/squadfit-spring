@@ -65,6 +65,12 @@ public class VideoService {
 
     }
 
+    public Video findOne(Long videoId) {
+
+        return videoRepository.findById(videoId).orElseThrow(()-> new RuntimeException("비디오 없는데요?"))
+
+    }
+
     /**
      * 클라이언트에서 영상 저장 후 링크만 받기
      * 1. 저장할 키와 URL 건네주기

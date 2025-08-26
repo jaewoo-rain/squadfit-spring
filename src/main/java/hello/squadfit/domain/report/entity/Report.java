@@ -24,6 +24,7 @@ public class Report {
     private Long id;
     private String title;
     private String content;
+    private Boolean isDone; // 레포트 작성되었는지
     // todo: 파일로 추가할 예정 지금은 제목과 내용으로 간단히 만들기
 
     // == 연관관계 == //
@@ -54,20 +55,22 @@ public class Report {
     }
 
     // == 생성 메서드 == //
-    public static Report create(Trainer trainer, Member member, String content, String title, VideoReport... videoReports){
+    public static Report create(Trainer trainer, Member member,VideoReport... videoReports){
         Report report = new Report();
-        report.content = content;
-        report.title = title;
 
         for (VideoReport videoReport : videoReports) {
             report.addVideoReports(videoReport);
         }
-
         report.linked(trainer, member);
 
         return report;
 
     }
 
+    public void publishReport(String content, String title){
+        this.content = content;
+        this.title = title;
+
+    }
 
 }
