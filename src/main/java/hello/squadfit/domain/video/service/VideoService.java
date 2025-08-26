@@ -26,12 +26,12 @@ public class VideoService {
 
     private final MemberService memberService;
     private final RecordService recordService;
-    private VideoRepository videoRepository;
+    private final VideoRepository videoRepository;
 
     /**
      * 서버에서 영상 저장하기
      */
-    public Long saveByServer(MultipartFile file, Long memberId, Long recordId, SaveVideoRequest saveVideoRequest){
+    public Long saveByServer(Long memberId, Long recordId, SaveVideoRequest saveVideoRequest){
         Member findMember = memberService.findOne(memberId).orElseThrow(() -> new RuntimeException("멤버가 없어유"));
         ExerciseRecord findRecord = recordService.getRecord(recordId).orElseThrow(() -> new RuntimeException("기록이 없어용"));
 
@@ -53,7 +53,7 @@ public class VideoService {
 
         Video video = Video.create(findMember, findRecord,
                 SaveVideoDto.builder()
-                        .visibility(saveVideoRequest.getVisibility())
+                        .visibility(VideoVisibility.valueOf(saveVideoRequest.getVisibility()))
                         .title(saveVideoRequest.getTitle())
                         .key(key)
                         .build()

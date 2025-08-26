@@ -11,6 +11,6 @@ public class SaveVideoRequest {
     @NotBlank
     private String title;
     @NotNull
-    private VideoVisibility visibility;
+    private String visibility;
 
 }
