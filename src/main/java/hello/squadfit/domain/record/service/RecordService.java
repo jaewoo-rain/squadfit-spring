@@ -71,11 +71,10 @@ public class RecordService {
     }
 
     // 단일 기록 조회
-    public Optional<SingleRecordResponse> findOne(Long memberId, Long recordId) {
-        Optional<ExerciseRecord> findRecord = recordRepository.findByMemberIdAndId(memberId, recordId);
+    public SingleRecordResponse findOne(Long memberId, Long recordId) {
+        ExerciseRecord findRecord = recordRepository.findByMemberIdAndId(memberId, recordId).orElseThrow(() -> new RuntimeException("기록이 없는데요?"));
 
-        Optional<SingleRecordResponse> result = findRecord
-                .map(record -> SingleRecordResponseMapper.entityToDto(record));
+        SingleRecordResponse result = SingleRecordResponseMapper.entityToDto(findRecord);
 
         return result;
     }

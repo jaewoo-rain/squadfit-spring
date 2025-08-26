@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -54,7 +53,7 @@ public class RecordController {
 
     @Operation(summary = "유저 운동 기록 전체 조회")
     @GetMapping("/all/{memberId}")
-    public ResponseEntity<AllRecordResponse> findAllRecord(@PathVariable Long memberId){
+    public ResponseEntity<AllRecordResponse> findAllRecord(@PathVariable("memberId") Long memberId){
         if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
@@ -68,20 +67,21 @@ public class RecordController {
 
     @Operation(summary = "유저 운동 기록 단일 조회")
     @GetMapping("/single/{memberId}/{exerciseId}")
-    public ResponseEntity<Optional<SingleRecordResponse>> findOneRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
+    public ResponseEntity<SingleRecordResponse> findOneRecord(@PathVariable("memberId") Long memberId, @PathVariable("exerciseId") Long exerciseId){
 
         if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");
         }
 
         // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
-        Optional<SingleRecordResponse> result = recordService.findOne(memberId, exerciseId);
+        SingleRecordResponse result = recordService.findOne(memberId, exerciseId);
 
         return ResponseEntity.ok(result); // 없으면 nul 처리
     }
-
+    
+    @Operation(summary = "유저 운동 기록 단일 삭제")
     @DeleteMapping("/{memberId}/{exerciseId}")
-    public ResponseEntity<Long> deleteRecord(@PathVariable Long memberId, @PathVariable Long exerciseId){
+    public ResponseEntity<Long> deleteRecord(@PathVariable("memberId") Long memberId, @PathVariable("exerciseId") Long exerciseId){
 
         if(notExistMember(memberId)){
             throw new IllegalStateException("유저가 존재하지 않습니다.");

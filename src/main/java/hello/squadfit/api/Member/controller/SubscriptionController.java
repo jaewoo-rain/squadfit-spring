@@ -13,21 +13,21 @@ public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 
     @PostMapping("/{memberId}")
-    public ResponseEntity<Long> createSubscription(@PathVariable Long memberId){
+    public ResponseEntity<Long> createSubscription(@PathVariable("memberId") Long memberId){
         Long subscriptionId = subscriptionService.createSubscription(memberId);
 
         return ResponseEntity.ok(subscriptionId);
     }
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<String> cancelSubscription(@PathVariable Long memberId){
+    public ResponseEntity<String> cancelSubscription(@PathVariable("memberId") Long memberId){
         subscriptionService.cancelSubscription(memberId);
 
         return ResponseEntity.ok("해제성공");
     }
 
     @PutMapping("/{memberId}")
-    public ResponseEntity<Long> extendSubscription(@PathVariable Long memberId){
+    public ResponseEntity<Long> extendSubscription(@PathVariable("memberId") Long memberId){
         Long subscriptionId = subscriptionService.extendSubscription(memberId);
 
         return ResponseEntity.ok(subscriptionId);

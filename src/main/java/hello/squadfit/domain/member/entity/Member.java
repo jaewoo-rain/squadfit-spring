@@ -4,6 +4,7 @@ import hello.squadfit.domain.PointConst;
 import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
 import lombok.*;
@@ -60,16 +61,18 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Video> videos = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<Report> reports = new ArrayList<>();
+
+
 //    private List<Notification> notifications = new ArrayList<>();
 
 //    private List<Payment> payments = new ArrayList<>();
 
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
-
 //    private List<Comment> comments = new ArrayList<>();
 
-//    private List<Report> reports = new ArrayList<>();
 
     // == 연관관계 편의 메서드 == //
     public void linkSubscription(Subscription subscription) {

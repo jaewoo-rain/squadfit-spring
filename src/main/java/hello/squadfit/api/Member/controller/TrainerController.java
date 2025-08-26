@@ -69,7 +69,7 @@ public class TrainerController {
      * 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
      */
     @GetMapping("/info/{trainerId}")
-    public ResponseEntity<TrainerInfoResponse> getInfo(@PathVariable Long trainerId){
+    public ResponseEntity<TrainerInfoResponse> getInfo(@PathVariable("trainerId") Long trainerId){
 
         Trainer trainer = trainerService.findOneTrainer(trainerId);
         TrainerInfoResponse result = TrainerInfoResponse.builder()
@@ -85,7 +85,7 @@ public class TrainerController {
      * 이름으로 트레이너 찾기 todo: 동적쿼리 이용해서 장소나 다른 정보로도 찾을수 있도록 하기
      */
     @GetMapping("/search")
-    public ResponseEntity<?> findTrainerByName(@RequestParam String name){
+    public ResponseEntity<?> findTrainerByName(@RequestParam("name") String name){
 
         List<Trainer> trainers =  trainerService.findAllByName(name);
 
