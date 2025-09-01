@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -25,18 +28,23 @@ public class ReportService {
     private final TrainerService trainerService;
     private final ReportRepository reportRepository;
 
-
     // member 가 레포트 신청하기
-    public void createReport(Long trainerId, Long memberId, Long videoId){
-        //todo: 이 비디오가 멤버꺼 맞는지 확인
+    @Transactional
+    public void createReport(Long trainerId, Long memberId, Long... videoIds){
 
-        Member member = memberService.findOne(memberId).orElseThrow(() -> new RuntimeException("member 없는데요?"));
-        Video video = videoService.findOne(videoId);
-        Trainer trainer = trainerService.findOneTrainer(trainerId);
+        Member member = memberService.findOne(memberId);
+        Trainer trainer = trainerService.findOne(trainerId);
+        List<VideoReport> videoReports = new ArrayList<>();
 
-        VideoReport videoReport = VideoReport.create(video);
+        for (Long videoId : videoIds) {
+            Video video = videoService.findOne(videoId);
+            if(!video.getMember().equals(member)){
+                throw new RuntimeException("이 비디오 주인 맞아?");
+            }
+            videoReports.add(VideoReport.create(video)) ;
+        }
 
-        Report.create(trainer, member, videoReport);
+        Report.create(trainer, member, videoReports);
 
         // video 여러개 불러오기
         // video 이용해서 videoReport 만들기
@@ -45,9 +53,10 @@ public class ReportService {
     }
 
     // 레포트 작성하기
-    public void publishReport(Long reportId, PublishReportRequest request){
+    @Transactional
+    public Long publishReport(Long reportId, PublishReportRequest request){
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("레포트 없는데?"));
-        report.publishReport(request.getContent(), request.getTitle());
+        return report.publishReport(request.getContent(), request.getTitle());
     }
 
     // 레포트 조회하기

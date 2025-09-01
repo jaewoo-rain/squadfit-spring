@@ -19,7 +19,7 @@ public class AttendanceService {
     // 출석하기
     @Transactional
     public Long attendance(Long memberId){
-        Member member = memberService.findOne(memberId).orElseThrow(() -> new RuntimeException("해당 멤버가 없습니다."));
+        Member member = memberService.findOne(memberId);
         
         // 출석 하기 -> 변경 감지로 엔티티 저장 됨
         Attendance attendance = Attendance.create(member);
@@ -33,7 +33,7 @@ public class AttendanceService {
     // 출석 조회하기
     public List<AttendanceResponse> findAttendanceByMember(Long memberId){
 
-        Member member = memberService.findOne(memberId).orElseThrow(() -> new RuntimeException("해당 멤버가 없습니다."));
+        Member member = memberService.findOne(memberId);
         List<Attendance> attendances = member.getAttendances();
 
         return attendances.stream().map(attendance -> AttendanceResponse.builder()

@@ -3,7 +3,6 @@ package hello.squadfit.domain.member.service;
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.Role;
-import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.MemberProfile;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.repository.TrainerRepository;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +58,7 @@ public class TrainerService {
     }
 
     // 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
-    public Trainer findOneTrainer(Long trainerId){
+    public Trainer findOne(Long trainerId){
         return trainerRepository.findById(trainerId).orElseThrow(() -> new RuntimeException("트레이너 없는데요?"));
     }
     // 트레이너 프로필 변경 todo: 트레이너 정보 추가될테니까 나중에하기

@@ -46,10 +46,12 @@ public class VideoReport {
     }
 
     // == 생성자 메서드 == //
-    public static VideoReport create(Video video){
+    public static VideoReport create(Video... video){
         VideoReport videoReport = new VideoReport();
 
-        videoReport.addVideo(video);
+        for (Video v : video) {
+            videoReport.addVideo(v);
+        }
 
         return videoReport;
     }

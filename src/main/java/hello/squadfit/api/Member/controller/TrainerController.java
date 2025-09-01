@@ -71,7 +71,7 @@ public class TrainerController {
     @GetMapping("/info/{trainerId}")
     public ResponseEntity<TrainerInfoResponse> getInfo(@PathVariable("trainerId") Long trainerId){
 
-        Trainer trainer = trainerService.findOneTrainer(trainerId);
+        Trainer trainer = trainerService.findOne(trainerId);
         TrainerInfoResponse result = TrainerInfoResponse.builder()
                 .name(trainer.getProfile().getName())
                 .phone(trainer.getProfile().getPhone())

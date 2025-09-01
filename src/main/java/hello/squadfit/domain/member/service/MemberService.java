@@ -12,8 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @Slf4j
 @Transactional(readOnly = true)
@@ -44,8 +42,8 @@ public class MemberService {
         return save.getId();
     }
 
-    public Optional<Member> findOne(Long memberId){
-        return memberRepository.findById(memberId);
+    public Member findOne(Long memberId){
+        return memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("멤버 없는데유?"));
     }
 
     public Member login(LoginRequest loginRequest) {
