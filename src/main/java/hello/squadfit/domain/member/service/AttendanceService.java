@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -41,7 +42,14 @@ public class AttendanceService {
                         .memberName(attendance.getMember().getNickName())
                         .build()
         ).toList();
+        
+    }
+    
+    // todo:출석 여부 확인하기 필요한가? 필요하다면 어떻게하지? 생각 더 해보기
+    public Boolean checkAttendance(Long memberId){
 
+        Member findMember = memberService.findOne(memberId);
+        return findMember.getAttendances().stream().anyMatch(attendance -> attendance.getAttendanceTime().toLocalDate().isEqual(LocalDate.now()));
 
     }
 }

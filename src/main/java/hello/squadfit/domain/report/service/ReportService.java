@@ -69,6 +69,7 @@ public class ReportService {
     }
 
     // 레포트 작성하기
+    // todo: 레포트작성 방식 바꾸기 PDF로 할것인가?
     @Transactional
     public Long publishReport(Long reportId, PublishReportRequest request){
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("레포트 없는데?"));
