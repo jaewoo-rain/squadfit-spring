@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
@@ -24,6 +25,7 @@ public class Report {
     private Long id;
     private String title;
     private String content;
+    private Boolean isDone; // 레포트 작성되었는지
     // todo: 파일로 추가할 예정 지금은 제목과 내용으로 간단히 만들기
 
     // == 연관관계 == //
@@ -32,7 +34,7 @@ public class Report {
     private Trainer trainer;
 
     @OneToMany(mappedBy = "report", cascade = ALL, orphanRemoval = true)
-    private List<VideoReport> videoReports;
+    private List<VideoReport> videoReports = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -54,20 +56,27 @@ public class Report {
     }
 
     // == 생성 메서드 == //
-    public static Report create(Trainer trainer, Member member, String content, String title, VideoReport... videoReports){
+    public static Report create(Trainer trainer, Member member, List<VideoReport> videoReports){
         Report report = new Report();
-        report.content = content;
-        report.title = title;
+        report.title = "";
+        report.content = "";
+        report.isDone = false;
 
         for (VideoReport videoReport : videoReports) {
             report.addVideoReports(videoReport);
         }
-
         report.linked(trainer, member);
 
         return report;
 
     }
 
+    // 리포트 작성하기
+    public Long publishReport(String content, String title){
+        this.content = content;
+        this.title = title;
+        this.isDone = true;
+        return id;
+    }
 
 }

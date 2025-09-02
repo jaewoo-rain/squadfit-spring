@@ -29,8 +29,7 @@ class MemberServiceTest {
                         ,"010-1234-5678","jaewoo","yang");
 
         Long memberId = memberService.register(createMemberProfileRequest);
-        Optional<Member> member = memberService.findOne(memberId);
-        Member findMember = member.orElse(null);
+        Member findMember = memberService.findOne(memberId);
 
         assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());
 

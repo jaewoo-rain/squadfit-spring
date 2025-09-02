@@ -12,15 +12,18 @@ import org.springframework.web.bind.annotation.*;
 public class VideoController {
 
     private final VideoService videoService;
-//
-//    @PostMapping("/{memberId}/{recordId}")
-//    public ResponseEntity<Long> saveByServer(
-//            @PathVariable Long memberId,
-//            @PathVariable Long recordId,
-//            @RequestBody SaveVideoRequest request
-//    ){
-//        videoService.saveByServer();
-//    }
+
+    // 비디오 서버에서 저장하기
+    @PostMapping("/{memberId}/{recordId}")
+    public ResponseEntity<Long> saveByServer(
+            @PathVariable("memberId") Long memberId,
+            @PathVariable("recordId") Long recordId,
+            @RequestBody SaveVideoRequest request
+    ){
+        Long result = videoService.saveByServer(memberId, recordId, request);
+
+        return ResponseEntity.ok(result);
+    }
 
 
 }

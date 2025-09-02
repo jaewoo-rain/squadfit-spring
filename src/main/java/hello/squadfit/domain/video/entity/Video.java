@@ -81,6 +81,7 @@ public class Video {
         video.title = dto.getTitle();
         video.saveKey = dto.getKey();
         video.visibility = dto.getVisibility();
+
         video.addMember(member);
         video.addRecord(record);
 

@@ -74,7 +74,7 @@ public class RecordController {
         }
 
         // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
-        SingleRecordResponse result = recordService.findOne(memberId, exerciseId);
+        SingleRecordResponse result = recordService.findByMemberIdAndRecordId(memberId, exerciseId);
 
         return ResponseEntity.ok(result); // 없으면 nul 처리
     }

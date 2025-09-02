@@ -92,7 +92,7 @@ public class Member {
         member.requiredExperience = 100;
         member.subscription = null;
         member.point = 0;
-        member.availableReportCount = 0;
+        member.availableReportCount = 5;
         member.subscribed = false;
         return member;
     }
@@ -129,7 +129,7 @@ public class Member {
     /**
      * 레포트 신청하기
      */
-    public void decreaseRequestReportPoint() {
+    public void requestReport() {
         if (availableReportCount <= 0) {
             throw new IllegalStateException("신청 가능한 레포트 수가 없습니다.");
         }

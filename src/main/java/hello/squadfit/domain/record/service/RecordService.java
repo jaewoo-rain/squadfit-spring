@@ -71,7 +71,7 @@ public class RecordService {
     }
 
     // 단일 기록 조회
-    public SingleRecordResponse findOne(Long memberId, Long recordId) {
+    public SingleRecordResponse findByMemberIdAndRecordId(Long memberId, Long recordId) {
         ExerciseRecord findRecord = recordRepository.findByMemberIdAndId(memberId, recordId).orElseThrow(() -> new RuntimeException("기록이 없는데요?"));
 
         SingleRecordResponse result = SingleRecordResponseMapper.entityToDto(findRecord);
@@ -88,5 +88,9 @@ public class RecordService {
     public Long remove(Long exerciseId) {
         recordRepository.deleteById(exerciseId);
         return exerciseId;
+    }
+
+    public ExerciseRecord findOne(Long memberId, Long recordId) {
+        return recordRepository.findByMemberIdAndId(memberId, recordId).orElseThrow(() -> new RuntimeException("기록이 없는데요?"));
     }
 }
