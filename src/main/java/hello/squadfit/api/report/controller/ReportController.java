@@ -1,10 +1,8 @@
 package hello.squadfit.api.report.controller;
 
-<<<<<<< HEAD
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-=======
 import hello.squadfit.api.report.request.CreateReportRequest;
 import hello.squadfit.api.report.request.PublishReportRequest;
 import hello.squadfit.api.report.response.ReportResponse;
@@ -16,21 +14,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
->>>>>>> 16-레포트-관련-설계하기
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/report")
 public class ReportController {
 
-<<<<<<< HEAD
-    // 레포트 신청하기
-
-    // 레포트 만들기
-
-
-
-=======
     private final ReportService reportService;
 
     // 레포트 신청하기
@@ -84,5 +73,4 @@ public class ReportController {
         return ResponseEntity.ok(report);
 
     }
->>>>>>> 16-레포트-관련-설계하기
 }

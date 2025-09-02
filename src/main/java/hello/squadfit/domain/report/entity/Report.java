@@ -73,10 +73,14 @@ public class Report {
 
     // 리포트 작성하기
     public Long publishReport(String content, String title){
+        if(this.isDone){
+            throw new RuntimeException("이미 작성된 리포트입니다.");
+        }
         this.content = content;
         this.title = title;
         this.isDone = true;
         return id;
+
     }
 
 }
