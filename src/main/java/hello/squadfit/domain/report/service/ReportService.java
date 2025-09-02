@@ -1,6 +1,7 @@
 package hello.squadfit.domain.report.service;
 
 import hello.squadfit.api.report.request.PublishReportRequest;
+import hello.squadfit.api.report.response.ReportResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.service.MemberService;
@@ -11,6 +12,8 @@ import hello.squadfit.domain.report.repository.ReportRepository;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,9 +31,12 @@ public class ReportService {
     private final TrainerService trainerService;
     private final ReportRepository reportRepository;
 
-    // member 가 레포트 신청하기
+    /**
+     * member 가 레포트 신청하기
+     * Report 안채워진 상태로 껍질만 만들기
+     * */
     @Transactional
-    public void createReport(Long trainerId, Long memberId, Long... videoIds){
+    public Long createReport(Long trainerId, Long memberId, List<Long> videoIds){
 
         Member member = memberService.findOne(memberId);
         Trainer trainer = trainerService.findOne(trainerId);
@@ -38,14 +44,15 @@ public class ReportService {
 
         for (Long videoId : videoIds) {
             Video video = videoService.findOne(videoId);
-            if(!video.getMember().equals(member)){
+            if(!video.getMember().getId().equals(member.getId())){
                 throw new RuntimeException("이 비디오 주인 맞아?");
             }
             videoReports.add(VideoReport.create(video)) ;
         }
 
-        Report.create(trainer, member, videoReports);
-
+        Report report = Report.create(trainer, member, videoReports);
+        reportRepository.save(report);
+        return report.getId();
         // video 여러개 불러오기
         // video 이용해서 videoReport 만들기
         // videoReport 여러개 이용해서 report 만들기
@@ -60,9 +67,30 @@ public class ReportService {
     }
 
     // 레포트 조회하기
+    public ReportResponse findById(Long reportId){
+        // todo:멤버로 자신의 리포트인지 확인하는 작업
+
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("리포트가 없는데요?"));
+        return ReportResponse.entityToRequest(report);
+    }
 
     // 레포트 전제 조회하기(제목 정도만?)
+    public Page<ReportResponse> findAllById(Long memberId, int page, int size){
+        Member findMember = memberService.findOne(memberId);
+        Page<Report> reports = reportRepository.findAllByMember(findMember, PageRequest.of(page, size));
+
+        return reports.map((report -> ReportResponse.entityToRequest(report)));
+    }
 
     // 레포트 삭제하기
+    @Transactional
+    public Long deleteReport(Long reportId){
+        // todo:멤버로 자신의 리포트인지 확인하는 작업
+
+        reportRepository.deleteById(reportId);
+
+        return reportId;
+
+    }
 
 }

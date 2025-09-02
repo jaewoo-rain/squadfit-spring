@@ -2,31 +2,29 @@ package hello.squadfit.api;
 
 import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
-import hello.squadfit.api.Member.response.SingleRecordResponse;
 import hello.squadfit.api.record.request.SaveRecordRequest;
+import hello.squadfit.api.report.request.PublishReportRequest;
 import hello.squadfit.api.video.request.SaveVideoRequest;
-import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.AttendanceService;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.member.service.TrainerService;
 import hello.squadfit.domain.record.ExerciseCategory;
-import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import hello.squadfit.domain.record.service.RecordService;
 import hello.squadfit.domain.report.service.ReportService;
-import hello.squadfit.domain.video.dto.SaveVideoDto;
-import hello.squadfit.domain.video.entity.Video;
-import hello.squadfit.domain.video.entity.VideoVisibility;
 import hello.squadfit.domain.video.repository.VideoRepository;
 import hello.squadfit.domain.video.service.VideoService;
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import java.util.Arrays;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @Transactional
@@ -40,10 +38,10 @@ public class InitController {
     private final VideoRepository videoRepository;
     private final VideoService videoService;
     private final ReportService reportService;
-
+    private final EntityManager em;
     @PostConstruct
-    @Transactional
     public void init (){
+
 
         // 타입 지정
         ExerciseType initType = exerciseTypeRepository.findByName("푸쉬업")
@@ -88,11 +86,16 @@ public class InitController {
         Long trainer2Id = trainerService.register(new CreateTrainerRequest("initTrainer2", "1234", "220000", "010-1234-5678", "trainer2", "전주 체육관"));
         Long trainer3Id = trainerService.register(new CreateTrainerRequest("initTrainer3", "1234", "330000", "010-1234-5678", "trainer3", "제주도 체육관"));
 
-        // 레포트 만들기
-        reportService.createReport(trainer1Id, member1Id, video1Id, video2Id);
-        reportService.createReport(trainer1Id, member1Id, video3Id);
-        reportService.createReport(trainer2Id, member2Id, video4Id);
+        // 레포트 신청하기
+        Long report1Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video1Id, video2Id));
+        Long report2Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video3Id));
+        Long report3Id = reportService.createReport(trainer2Id, member2Id, Arrays.asList(video4Id));
 
+
+        // 레포트 만들어주기
+        PublishReportRequest reportRequest1 = PublishReportRequest.builder().title("레포트1번 작성지").content("레포트1번 내용").build();
+        reportService.publishReport(report1Id, reportRequest1);
+        log.info("resportId = {}", report1Id);
         /**
          * 예외 멤버랑 video랑 매칭 잘못 됨
          */

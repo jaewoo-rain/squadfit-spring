@@ -71,9 +71,11 @@ public class Report {
 
     }
 
+    // 리포트 작성하기
     public Long publishReport(String content, String title){
         this.content = content;
         this.title = title;
+        this.isDone = true;
         return id;
     }
 
