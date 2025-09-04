@@ -1,10 +1,14 @@
 package hello.squadfit.api.video.controller;
 
 import hello.squadfit.api.video.request.SaveVideoRequest;
+import hello.squadfit.api.video.response.VideoResponse;
+import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +27,14 @@ public class VideoController {
         Long result = videoService.saveByServer(memberId, recordId, request);
 
         return ResponseEntity.ok(result);
+    }
+
+    // 코멘트 가능한 영상들 불러오기
+    @GetMapping("/comment")
+    public ResponseEntity<?> findCommentableVideo(){
+
+        List<VideoResponse> commentableVideo = videoService.findCommentableVideo();
+        return ResponseEntity.ok(commentableVideo);
     }
 
 
