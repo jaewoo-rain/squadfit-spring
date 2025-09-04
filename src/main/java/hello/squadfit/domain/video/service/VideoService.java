@@ -1,6 +1,7 @@
 package hello.squadfit.domain.video.service;
 
 import hello.squadfit.api.video.request.SaveVideoRequest;
+import hello.squadfit.api.video.response.VideoResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
@@ -9,14 +10,11 @@ import hello.squadfit.domain.video.dto.SaveVideoDto;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.entity.VideoVisibility;
 import hello.squadfit.domain.video.repository.VideoRepository;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -68,11 +66,23 @@ public class VideoService {
 
     }
 
+    // 코멘트 가능한 영상들 불러오기
+    public List<VideoResponse> findCommentableVideo() {
+
+        List<Video> videos = videoRepository.findByVisibility(VideoVisibility.PUBLIC);
+        List<VideoResponse> list = videos.stream().map((video) -> VideoResponse.entityToResponse(video)).toList();
+
+        return list;
+
+    }
+
     public Video findOne(Long videoId) {
 
         return videoRepository.findById(videoId).orElseThrow(()-> new RuntimeException("비디오 없는데요?"));
 
     }
+
+
 
     /**
      * 클라이언트에서 영상 저장 후 링크만 받기
