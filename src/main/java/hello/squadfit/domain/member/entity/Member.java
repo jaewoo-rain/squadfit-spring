@@ -18,8 +18,6 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter
-//@Builder // 나중에 도입하자
-//@AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder때문에 사용해야함, 생성자 외부에서 못만들도록 하기 위해
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 protected로 설정하여 기본생성자 사용못하게 막기
 // 바뀌는 member 정보
 public class Member {
@@ -71,7 +69,6 @@ public class Member {
 
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
-//    private List<Comment> comments = new ArrayList<>();
 
 
     // == 연관관계 편의 메서드 == //
@@ -119,7 +116,7 @@ public class Member {
     /**
      * 코멘트 달기 포인트 감소
      */
-    public void decreaseCommentPoint(){
+    public void requestComment(){
         if(point < PointConst.COMMENT_POINT){
             throw new IllegalStateException("포인트가 부족하여 코멘트 신청이 불가합니다");
         }
