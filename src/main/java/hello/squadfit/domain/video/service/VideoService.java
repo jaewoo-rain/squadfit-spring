@@ -57,7 +57,6 @@ public class VideoService {
 
         Video video = Video.create(findMember, findRecord,
                 SaveVideoDto.builder()
-                        .visibility(VideoVisibility.valueOf(saveVideoRequest.getVisibility()))
                         .title(saveVideoRequest.getTitle())
                         .key(key)
                         .build()

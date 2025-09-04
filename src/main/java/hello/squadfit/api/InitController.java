@@ -14,6 +14,7 @@ import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import hello.squadfit.domain.record.service.RecordService;
 import hello.squadfit.domain.report.service.ReportService;
 import hello.squadfit.domain.video.repository.VideoRepository;
+import hello.squadfit.domain.video.service.CommentService;
 import hello.squadfit.domain.video.service.VideoService;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
@@ -39,6 +40,8 @@ public class InitController {
     private final VideoService videoService;
     private final ReportService reportService;
     private final EntityManager em;
+    private final CommentService commentService;
+
     @PostConstruct
     public void init (){
 
@@ -64,15 +67,15 @@ public class InitController {
         Long record5Id = recordService.save(new SaveRecordRequest(member2Id, 50, 40, 40, 4, initType.getId()));
 
         // 동영상 만들기
-        SaveVideoRequest request1 = SaveVideoRequest.builder().title("1번 동영상").visibility("PUBLIC").build();
+        SaveVideoRequest request1 = SaveVideoRequest.builder().title("1번 동영상").build();
         Long video1Id = videoService.saveByServer(member1Id, record1Id, request1);
-        SaveVideoRequest request2 = SaveVideoRequest.builder().title("2번 동영상").visibility("PUBLIC").build();
+        SaveVideoRequest request2 = SaveVideoRequest.builder().title("2번 동영상").build();
         Long video2Id = videoService.saveByServer(member1Id, record2Id, request2);
-        SaveVideoRequest request3 = SaveVideoRequest.builder().title("3번 동영상").visibility("PUBLIC").build();
+        SaveVideoRequest request3 = SaveVideoRequest.builder().title("3번 동영상").build();
         Long video3Id = videoService.saveByServer(member1Id, record3Id, request3);
-        SaveVideoRequest request4 = SaveVideoRequest.builder().title("4번 동영상").visibility("PUBLIC").build();
+        SaveVideoRequest request4 = SaveVideoRequest.builder().title("4번 동영상").build();
         Long video4Id = videoService.saveByServer(member2Id, record4Id, request4);
-        SaveVideoRequest request5 = SaveVideoRequest.builder().title("5번 동영상").visibility("PUBLIC").build();
+        SaveVideoRequest request5 = SaveVideoRequest.builder().title("5번 동영상").build();
         Long video5Id = videoService.saveByServer(member2Id, record5Id, request5);
 
         /**
@@ -95,7 +98,6 @@ public class InitController {
         // 레포트 만들어주기
         PublishReportRequest reportRequest1 = PublishReportRequest.builder().title("레포트1번 작성지").content("레포트1번 내용").build();
         reportService.publishReport(report1Id, reportRequest1);
-        log.info("resportId = {}", report1Id);
         /**
          * 예외 멤버랑 video랑 매칭 잘못 됨
          */
@@ -109,8 +111,10 @@ public class InitController {
         attendanceService.attendance(member2Id);
         attendanceService.attendance(member3Id);
 
-
-
+        // 코멘트 신청하기
+        commentService.requestComment(member1Id, video1Id);
+        // 코멘트 작성하기
+        commentService.createComment(video1Id, trainer1Id, "자세가 좋아요");
 
     }
 }

@@ -57,9 +57,6 @@ public class Video {
     @OneToMany(mappedBy = "video", cascade = ALL, orphanRemoval = true)
     private List<VideoReport> videoReports = new ArrayList<>();
 
-    // todo: 나중에 레포트 만들때 생성
-//    @OneToMany
-//    private VideoReport videoReport;
 
     // == 연관관계 편의메서드 == //
     public void addMember(Member member){
@@ -80,7 +77,7 @@ public class Video {
         Video video = new Video();
         video.title = dto.getTitle();
         video.saveKey = dto.getKey();
-        video.visibility = dto.getVisibility();
+        video.visibility = VideoVisibility.PRIVATE;
 
         video.addMember(member);
         video.addRecord(record);
@@ -92,11 +89,26 @@ public class Video {
     // == 비즈니스 로직 == //
 
     /**
-     * 동영상 타이틀 변경
+     * 동영상 타이틀 변경 todo:
      */
     public void renameTitle(String title){
         this.title = title;
     }
 
 
+    // 코멘트 신청하기
+    public void requestComment() {
+        if(visibility.equals(VideoVisibility.PUBLIC)){
+            throw new RuntimeException("이미 신청했는데?");
+        }
+        visibility = VideoVisibility.PUBLIC;
+    }
+
+    // 코멘트 취소하기
+    public void cancelComment(){
+        if(!visibility.equals(VideoVisibility.PRIVATE)){
+            throw new RuntimeException("신청도 안했는데?");
+        }
+        visibility = VideoVisibility.PRIVATE;
+    }
 }

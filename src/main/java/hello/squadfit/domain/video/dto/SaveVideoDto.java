@@ -8,5 +8,4 @@ import lombok.Getter;
 public class SaveVideoDto {
     private String title;
     private String key;
-    private VideoVisibility visibility;
 }

@@ -27,7 +27,6 @@ public class Trainer {
     @Column
     private String place; // 체육관 장소
 
-
     // == 연관관계 == //
     @OneToMany(mappedBy = "trainer", cascade = ALL)
     private List<Comment> comments;
