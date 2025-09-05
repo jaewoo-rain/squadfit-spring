@@ -56,8 +56,8 @@ public class ReportController {
     @GetMapping("/all/{memberId}")
     public ResponseEntity<Page<ReportResponse>> findAll(
             @PathVariable("memberId") Long memberId,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "0") int page
+            @RequestParam(name = "size", defaultValue = "10") int size,
+            @RequestParam(name = "page", defaultValue = "0") int page
 
     ){
         Page<ReportResponse> result = reportService.findAllById(memberId, page, size);

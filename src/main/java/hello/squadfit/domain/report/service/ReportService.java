@@ -96,6 +96,7 @@ public class ReportService {
     @Transactional
     public Long deleteReport(Long reportId){
         // todo:멤버로 자신의 리포트인지 확인하는 작업
+        reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("레포트 없음"));
 
         reportRepository.deleteById(reportId);
 
