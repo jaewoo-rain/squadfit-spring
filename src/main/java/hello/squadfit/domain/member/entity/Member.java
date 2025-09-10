@@ -42,6 +42,7 @@ public class Member {
 
     private Integer point;
 
+    private Long missionCount; // 미션 성공 횟수
 
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
@@ -91,6 +92,7 @@ public class Member {
         member.point = 0;
         member.availableReportCount = 5;
         member.subscribed = false;
+        member.missionCount = 0L;
         return member;
     }
 
@@ -187,6 +189,13 @@ public class Member {
         );
         this.nickName = nickName;
 
+    }
+
+    /**
+     * 미션 성공
+     */
+    public void successMission(){
+        this.missionCount += 1L;
     }
 
     // 경험치 획득

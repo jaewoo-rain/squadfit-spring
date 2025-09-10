@@ -2,6 +2,7 @@ package hello.squadfit.domain;
 
 public interface PointConst {
     Integer ATTENDANCE_POINT = 5; // 출석 시 증가하는 포인트
+    Integer MISSION_POINT = 10; // 미션 성공 시 증가하는 포인트
     Integer EXERCISE_POINT = 30; // 운동 시 증가하는 포인트
     Integer COMMENT_POINT = 100; // 코멘트 달 때 필요한 포인트
     
