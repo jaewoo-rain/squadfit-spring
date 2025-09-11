@@ -7,6 +7,7 @@ import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.mission.entity.Mission;
 import hello.squadfit.domain.mission.repository.MissionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static org.apache.commons.lang3.RandomStringUtils.random;
 
+@Slf4j
 @Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
@@ -57,7 +59,9 @@ public class MissionService {
         Long missionCount = findMember.getMissionCount();
         // todo: 하루에 여러번 미션 성공 못하게 로직 작성하기
         // todo: 가입날짜 만들어서 가입날짜 기준 한달 지난 뒤면 상,중,하 리턴
-        
+        int createDay = findMember.getCreatedDate().getDayOfMonth();
+        log.info("createDay = {}", createDay);
+
         return missionCount;
 
     }
