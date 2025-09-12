@@ -1,8 +1,10 @@
 package hello.squadfit.api.mission.controller;
 
+import hello.squadfit.api.mission.request.CreateMissionRequest;
 import hello.squadfit.api.mission.response.MissionResponse;
 import hello.squadfit.domain.mission.service.MissionService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,24 @@ public class MissionController {
         MissionResponse mission = missionService.mission(memberId);
 
         return ResponseEntity.ok(mission);
+    }
+
+    // 미션 만들기
+    @PostMapping
+    public ResponseEntity<Long> createMission(CreateMissionRequest request){
+
+        Long missionId = missionService.createMission(request);
+
+        return ResponseEntity.ok(missionId);
+
+    }
+
+    // 미션 확인
+    @GetMapping("/{missionId}")
+    public ResponseEntity<MissionResponse> findMission(@PathVariable("missionId") Long missionId){
+        MissionResponse result = missionService.findMissionById(missionId);
+
+        return ResponseEntity.ok(result);
     }
 
 }
