@@ -13,5 +13,23 @@ spring:
         format_sql: true
 logging.level:
   org.hibernate.SQL: debug
+
+# todo: 보완관련 처리하기
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+# 톰캣 메트릭
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
 #  org.hibernate.type: trace #스프링 부트 2.x, hibernate5
 #  org.hibernate.orm.jdbc.bind: trace #스프링 부트 3.x, hibernate6

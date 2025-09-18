@@ -2,6 +2,7 @@ package hello.squadfit.domain.video.entity;
 
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
+import hello.squadfit.domain.report.entity.VideoPointReport;
 import hello.squadfit.domain.report.entity.VideoReport;
 import hello.squadfit.domain.video.dto.SaveVideoDto;
 import jakarta.persistence.*;
@@ -56,6 +57,9 @@ public class Video {
 
     @OneToMany(mappedBy = "video", cascade = ALL, orphanRemoval = true)
     private List<VideoReport> videoReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "video", cascade = ALL)
+    private List<VideoPointReport> videoPointReports = new ArrayList<>();
 
 
     // == 연관관계 편의메서드 == //

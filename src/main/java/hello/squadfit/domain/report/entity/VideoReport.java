@@ -34,10 +34,6 @@ public class VideoReport {
     @JoinColumn(name = "video_id")
     private Video video;
 
-    // == 비즈니스 로직 == //
-    public void addReport(Report report) {
-        this.report = report;
-    }
 
     // == 연관관계 편의 메서드 == //
     public void addVideo(Video video){
@@ -45,14 +41,20 @@ public class VideoReport {
         video.getVideoReports().add(this);
     }
 
+    public void addReport(Report report) {
+        this.report = report;
+    }
+
+
     // == 생성자 메서드 == //
-    public static VideoReport create(Video... video){
+    public static VideoReport create(Video video){
         VideoReport videoReport = new VideoReport();
 
-        for (Video v : video) {
-            videoReport.addVideo(v);
-        }
+        videoReport.addVideo(video);
 
         return videoReport;
     }
+
+    // == 비즈니스 로직 == //
+
 }

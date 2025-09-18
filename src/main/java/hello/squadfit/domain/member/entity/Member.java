@@ -5,6 +5,7 @@ import hello.squadfit.domain.common.BaseEntity;
 import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.domain.report.entity.PointReport;
 import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
@@ -30,7 +31,7 @@ public class Member extends BaseEntity {
     @Embedded
     private MemberProfile profile;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     @Column(nullable = false)
@@ -44,7 +45,6 @@ public class Member extends BaseEntity {
     private Integer point;
 
     private Long missionCount; // 미션 성공 횟수
-
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
@@ -64,6 +64,8 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Report> reports = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<PointReport> pointReports = new ArrayList<>();
 
 //    private List<Notification> notifications = new ArrayList<>();
 
@@ -91,8 +93,8 @@ public class Member extends BaseEntity {
         member.requiredExperience = 100;
         member.subscription = null;
         member.point = 0;
-        member.availableReportCount = 5;
-        member.subscribed = false;
+//        member.availableReportCount = 5;
+//        member.subscribed = false;
         member.missionCount = 0L;
         return member;
     }
@@ -135,6 +137,27 @@ public class Member extends BaseEntity {
         }
         availableReportCount--;
     }
+
+    /**
+     * 포인트 이용한 레포트 신청하기
+     */
+    public void requestPointReport() {
+        if(point < PointConst.REPORT_POINT){
+            throw new IllegalStateException("포인트가 부족하여 레포트 신청이 불가합니다, 당신의 포인트 : " + point);
+        }
+        point -= PointConst.REPORT_POINT;
+    }
+
+    /**
+     * 포인트 이용한 디테일한 레포트 신청하기
+     */
+    public void requestPointDetailReport() {
+        if(point < PointConst.DETAIL_REPORT_POINT){
+            throw new IllegalStateException("포인트가 부족하여 상세 레포트 신청이 불가합니다, 당신의 포인트 :" + point);
+        }
+        point -= PointConst.DETAIL_REPORT_POINT;
+    }
+
 
     /**
      * 구독하기
@@ -189,7 +212,6 @@ public class Member extends BaseEntity {
                         .build()
         );
         this.nickName = nickName;
-
     }
 
     /**
