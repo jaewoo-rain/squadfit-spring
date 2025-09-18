@@ -40,7 +40,7 @@ public class ReportService {
         Member member = memberService.findOne(memberId);
 
 
-        // 멤버 사용한 쿠폰 갯수 줄이기 + 포인트 검증하기
+        // 멤버 사용한 쿠폰 갯수 줄이기 + 쿠폰 검증하기
         member.requestReport();
 
         Trainer trainer = trainerService.findOne(trainerId);

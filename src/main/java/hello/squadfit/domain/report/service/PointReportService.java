@@ -3,12 +3,19 @@ package hello.squadfit.domain.report.service;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.report.entity.PointReport;
+import hello.squadfit.domain.report.entity.VideoPointReport;
+import hello.squadfit.domain.report.entity.VideoReport;
 import hello.squadfit.domain.report.repository.PointReportRepository;
+import hello.squadfit.domain.video.entity.Video;
+import hello.squadfit.domain.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,13 +24,27 @@ public class PointReportService {
 
     private final PointReportRepository pointReportRepository;
     private final MemberService memberService;
+    private final VideoService videoService;
 
     // 포인트 레포트 신청
     @Transactional
-    public Long requestPointReport(Long memberId, Boolean isDetail){
+    public Long requestPointReport(Long memberId, Boolean isDetail, List<Long> videoIds){
 
         Member findMember = memberService.findOne(memberId);
-        PointReport pointReport = PointReport.create(findMember, isDetail);
+        findMember.requestPointReport();
+
+        // VideoPointReport 매핑 테이블 만들기
+        List<VideoPointReport> videoPointReports = new ArrayList<>();
+        for (Long videoId : videoIds) {
+            Video video = videoService.findOne(videoId);
+            if(!video.getMember().getId().equals(findMember.getId())){
+                throw new RuntimeException("이 비디오 주인 맞아?");
+            }
+            videoPointReports.add(VideoPointReport.create(video)) ;
+        }
+
+        // PointReport 만들기
+        PointReport pointReport = PointReport.create(findMember, isDetail, videoPointReports);
         PointReport save = pointReportRepository.save(pointReport);
         return save.getId();
 

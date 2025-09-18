@@ -42,15 +42,24 @@ public class PointReport {
     private void addMember(Member member){
         member.getPointReports().add(this);
     }
+    private void addVideoPointReport(List<VideoPointReport> videoPointReports){
+        for (VideoPointReport videoPointReport : videoPointReports) {
+            this.videoPointReports.add(videoPointReport);
+            videoPointReport.addPointReport(this);
+        }
+    }
 
     // == 생성자 메서드 == //
-    public static PointReport create(Member member, boolean isDetail){
+    public static PointReport create(Member member, boolean isDetail, List<VideoPointReport> videoPointReports){
         PointReport pointReport = new PointReport();
         pointReport.title = "";
         pointReport.content = "";
         pointReport.isDone = false;
         pointReport.isDetail = isDetail;
         usePoint(member, isDetail); // 포인트 사용
+
+        pointReport.addVideoPointReport(videoPointReports);
+
         pointReport.addMember(member);
 
         return pointReport;
