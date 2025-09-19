@@ -2,12 +2,14 @@ package hello.squadfit.api;
 
 import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
+import hello.squadfit.api.mission.request.CreateMissionRequest;
 import hello.squadfit.api.record.request.SaveRecordRequest;
 import hello.squadfit.api.report.request.PublishReportRequest;
 import hello.squadfit.api.video.request.SaveVideoRequest;
 import hello.squadfit.domain.member.service.AttendanceService;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.member.service.TrainerService;
+import hello.squadfit.domain.mission.service.MissionService;
 import hello.squadfit.domain.record.ExerciseCategory;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
@@ -41,9 +43,14 @@ public class InitController {
     private final ReportService reportService;
     private final EntityManager em;
     private final CommentService commentService;
+    private final MissionService missionService;
 
     @PostConstruct
     public void init (){
+
+        // 일일 미션 생성
+        missionService.createMission(new CreateMissionRequest("첫번째 미션", "앉았다 일어나기"));
+
 
 
         // 타입 지정

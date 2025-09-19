@@ -39,10 +39,9 @@ public class ReportService {
     public Long createReport(Long trainerId, Long memberId, List<Long> videoIds){
         Member member = memberService.findOne(memberId);
 
-        // 멤버가 레포트 신청 구폰 존재하는지
-        if(member.getAvailableReportCount() <= 0){
-            throw new RuntimeException("쿠폰 없는데?");
-        }
+
+        // 멤버 사용한 쿠폰 갯수 줄이기 + 쿠폰 검증하기
+        member.requestReport();
 
         Trainer trainer = trainerService.findOne(trainerId);
         List<VideoReport> videoReports = new ArrayList<>();
@@ -58,8 +57,7 @@ public class ReportService {
         Report report = Report.create(trainer, member, videoReports);
         reportRepository.save(report);
 
-        // 멤버 사용한 쿠폰 갯수 줄이기
-        member.requestReport();
+
 
         return report.getId();
         // video 여러개 불러오기

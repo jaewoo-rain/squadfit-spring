@@ -1,9 +1,11 @@
 package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.domain.PointConst;
+import hello.squadfit.domain.common.BaseEntity;
 import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.domain.report.entity.PointReport;
 import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Video;
 import jakarta.persistence.*;
@@ -20,7 +22,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본생성자 protected로 설정하여 기본생성자 사용못하게 막기
 // 바뀌는 member 정보
-public class Member {
+public class Member extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -29,7 +31,7 @@ public class Member {
     @Embedded
     private MemberProfile profile;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String nickName;
 
     @Column(nullable = false)
@@ -42,7 +44,7 @@ public class Member {
 
     private Integer point;
 
-
+    private Long missionCount; // 미션 성공 횟수
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
@@ -62,6 +64,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<Report> reports = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member", cascade = ALL)
+    private List<PointReport> pointReports = new ArrayList<>();
 
 //    private List<Notification> notifications = new ArrayList<>();
 
@@ -89,8 +93,9 @@ public class Member {
         member.requiredExperience = 100;
         member.subscription = null;
         member.point = 0;
-        member.availableReportCount = 5;
-        member.subscribed = false;
+//        member.availableReportCount = 5;
+//        member.subscribed = false;
+        member.missionCount = 0L;
         return member;
     }
 
@@ -132,6 +137,27 @@ public class Member {
         }
         availableReportCount--;
     }
+
+    /**
+     * 포인트 이용한 레포트 신청하기
+     */
+    public void requestPointReport() {
+        if(point < PointConst.REPORT_POINT){
+            throw new IllegalStateException("포인트가 부족하여 레포트 신청이 불가합니다, 당신의 포인트 : " + point);
+        }
+        point -= PointConst.REPORT_POINT;
+    }
+
+    /**
+     * 포인트 이용한 디테일한 레포트 신청하기
+     */
+    public void requestPointDetailReport() {
+        if(point < PointConst.DETAIL_REPORT_POINT){
+            throw new IllegalStateException("포인트가 부족하여 상세 레포트 신청이 불가합니다, 당신의 포인트 :" + point);
+        }
+        point -= PointConst.DETAIL_REPORT_POINT;
+    }
+
 
     /**
      * 구독하기
@@ -186,7 +212,13 @@ public class Member {
                         .build()
         );
         this.nickName = nickName;
+    }
 
+    /**
+     * 미션 성공
+     */
+    public void successMission(){
+        this.missionCount += 1L;
     }
 
     // 경험치 획득
