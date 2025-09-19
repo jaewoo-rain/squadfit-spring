@@ -37,9 +37,8 @@ public class CommentService {
         if(video.getVisibility().equals(VideoVisibility.PUBLIC)){
             throw new RuntimeException("이미 요청했는데?");
         }
-        video.requestComment();
+        video.requestComment(findMember);
 
-        findMember.requestComment();
 
     }
     
