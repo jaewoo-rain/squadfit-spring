@@ -1,10 +1,12 @@
 package hello.squadfit.domain.report.service;
 
+import hello.squadfit.api.report.request.ApplyPointRequest;
+import hello.squadfit.api.report.response.PointReportListResponse;
+import hello.squadfit.api.report.response.PointReportResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.report.entity.PointReport;
 import hello.squadfit.domain.report.entity.VideoPointReport;
-import hello.squadfit.domain.report.entity.VideoReport;
 import hello.squadfit.domain.report.repository.PointReportRepository;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.service.VideoService;
@@ -28,14 +30,14 @@ public class PointReportService {
 
     // 포인트 레포트 신청
     @Transactional
-    public Long requestPointReport(Long memberId, Boolean isDetail, List<Long> videoIds){
+    public Long requestPointReport(Long memberId, ApplyPointRequest applyPointRequest){
 
         Member findMember = memberService.findOne(memberId);
         findMember.requestPointReport();
 
         // VideoPointReport 매핑 테이블 만들기
         List<VideoPointReport> videoPointReports = new ArrayList<>();
-        for (Long videoId : videoIds) {
+        for (Long videoId : applyPointRequest.getVideoIds()) {
             Video video = videoService.findOne(videoId);
             if(!video.getMember().getId().equals(findMember.getId())){
                 throw new RuntimeException("이 비디오 주인 맞아?");
@@ -44,7 +46,7 @@ public class PointReportService {
         }
 
         // PointReport 만들기
-        PointReport pointReport = PointReport.create(findMember, isDetail, videoPointReports);
+        PointReport pointReport = PointReport.create(findMember, applyPointRequest.getIsDetail(), videoPointReports);
         PointReport save = pointReportRepository.save(pointReport);
         return save.getId();
 
@@ -53,6 +55,8 @@ public class PointReportService {
     // 포인트 레포트 작성
     @Transactional
     public Long writePointReport(Long pointReportId){
+
+        // todo: 멤버 확인하는 절차
 
         PointReport pointReport = findOne(pointReportId);
         if(pointReport.getIsDetail()){
@@ -74,20 +78,22 @@ public class PointReportService {
     }
 
     // 레포트 전체 조회
-    public Page<PointReport> findAllPointReport(Long memberId, int size, int page){
+    public Page<PointReportListResponse> findAllPointReport(Long memberId, int size, int page){
         Member findMember = memberService.findOne(memberId);
 
-        Page<PointReport> member = pointReportRepository.findByMember(findMember, PageRequest.of(page, size));
-
-        return member;
+        Page<PointReport> pointReports = pointReportRepository.findByMember(findMember, PageRequest.of(page, size));
+        Page<PointReportListResponse> result = pointReports.map((pointReport -> PointReportListResponse.entityToResponse(pointReport)));
+        return result;
 
     }
 
     // 레포트 디테일 조회
-    public PointReport findDetailPointReport(Long pointReportId){
+    public PointReportResponse findDetailPointReport(Long pointReportId){
+        // todo:member 확인하기
         PointReport findPointReport = findOne(pointReportId);
+        PointReportResponse pointReportResponse = PointReportResponse.entityToResponse(findPointReport);
 
-        return findPointReport;
+        return pointReportResponse;
 
     }
 
