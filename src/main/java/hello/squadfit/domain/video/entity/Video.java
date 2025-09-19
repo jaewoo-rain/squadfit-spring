@@ -101,10 +101,12 @@ public class Video {
 
 
     // 코멘트 신청하기
-    public void requestComment() {
+    public void requestComment(Member member) {
         if(visibility.equals(VideoVisibility.PUBLIC)){
             throw new RuntimeException("이미 신청했는데?");
         }
+//         member.requestComment(); // 포인트 감소
+
         visibility = VideoVisibility.PUBLIC;
     }
 

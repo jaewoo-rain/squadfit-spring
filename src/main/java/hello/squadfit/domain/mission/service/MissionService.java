@@ -42,9 +42,7 @@ public class MissionService {
     // 일일 미션 불러오기 (0일차부터 31일차까지 미리 세팅해야할듯)
     public MissionResponse mission(Long memberId){
 
-        //todo: 출석과 미션은 분리시킨다.
-        //todo: 레포트에 포인트 사용함, 일정 포인트 -> 현금화, 포인트 이용하여 매일매일 정밀 간단 레포트 (토큰수에 따라서 500포인트 -> 1000포인트)
-        //todo: 코멘트 포인트는 이후에 도입함, 포인트 사용하면 정밀 레포트(5만) 받을 수 있음
+        //todo: 미션 보완하기
         //todo: 일일미션 -> 스트레칭 처럼 간단하게(한달에 한번씩 바뀜)
         //todo: 운동시간추가하기, 출석 시 간단히 입력창?
         Member findMember = memberService.findOne(memberId);
