@@ -92,9 +92,9 @@ public class Member extends BaseEntity {
         member.level = 1;
         member.requiredExperience = 100;
         member.subscription = null;
-        member.point = 0;
-//        member.availableReportCount = 5;
-//        member.subscribed = false;
+        member.point = 50000;
+        member.availableReportCount = 5;
+        member.subscribed = false;
         member.missionCount = 0L;
         return member;
     }

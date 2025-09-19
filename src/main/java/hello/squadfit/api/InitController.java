@@ -4,6 +4,7 @@ import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
 import hello.squadfit.api.mission.request.CreateMissionRequest;
 import hello.squadfit.api.record.request.SaveRecordRequest;
+import hello.squadfit.api.report.request.ApplyPointRequest;
 import hello.squadfit.api.report.request.PublishReportRequest;
 import hello.squadfit.api.video.request.SaveVideoRequest;
 import hello.squadfit.domain.member.service.AttendanceService;
@@ -14,6 +15,7 @@ import hello.squadfit.domain.record.ExerciseCategory;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import hello.squadfit.domain.record.service.RecordService;
+import hello.squadfit.domain.report.service.PointReportService;
 import hello.squadfit.domain.report.service.ReportService;
 import hello.squadfit.domain.video.repository.VideoRepository;
 import hello.squadfit.domain.video.service.CommentService;
@@ -44,6 +46,7 @@ public class InitController {
     private final EntityManager em;
     private final CommentService commentService;
     private final MissionService missionService;
+    private final PointReportService pointReportService;
 
     @PostConstruct
     public void init (){
@@ -62,8 +65,8 @@ public class InitController {
 
         // 멤버 지정
         Long member1Id = memberService.register(new CreateMemberProfileRequest("init1", "1234", "001111", "010-1111-1111", "member1", "member1111"));
-        Long member2Id = memberService.register(new CreateMemberProfileRequest("init2", "1234", "002222", "010-2222-2222", "member1", "member3333"));
-        Long member3Id = memberService.register(new CreateMemberProfileRequest("init3", "1234", "003333", "010-3333-3333", "member1", "member3333"));
+        Long member2Id = memberService.register(new CreateMemberProfileRequest("init2", "1234", "002222", "010-2222-2222", "member2", "member2222"));
+        Long member3Id = memberService.register(new CreateMemberProfileRequest("init3", "1234", "003333", "010-3333-3333", "member3", "member3333"));
 
         // 기록 지정
         //member1, 10, 10, 10, 1, initType
@@ -92,19 +95,24 @@ public class InitController {
 //        Long l5 = videoService.saveByServer(member1Id, record5Id, request5);
 
         // 트레이너 지정
-        Long trainer1Id = trainerService.register(new CreateTrainerRequest("initTrainer1", "1234", "110000", "010-1234-5678", "trainer1", "서울 체육관"));
-        Long trainer2Id = trainerService.register(new CreateTrainerRequest("initTrainer2", "1234", "220000", "010-1234-5678", "trainer2", "전주 체육관"));
-        Long trainer3Id = trainerService.register(new CreateTrainerRequest("initTrainer3", "1234", "330000", "010-1234-5678", "trainer3", "제주도 체육관"));
+        Long trainer1Id = trainerService.register(new CreateTrainerRequest("initTrainer1", "1234", "110000", "010-0000-0000", "trainer1", "서울 체육관"));
+        Long trainer2Id = trainerService.register(new CreateTrainerRequest("initTrainer2", "1234", "220000", "010-1111-1111", "trainer2", "전주 체육관"));
+        Long trainer3Id = trainerService.register(new CreateTrainerRequest("initTrainer3", "1234", "330000", "010-2222-2222", "trainer3", "제주도 체육관"));
 
         // 레포트 신청하기
-        Long report1Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video1Id, video2Id));
-        Long report2Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video3Id));
-        Long report3Id = reportService.createReport(trainer2Id, member2Id, Arrays.asList(video4Id));
+//        Long report1Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video1Id, video2Id));
+//        Long report2Id = reportService.createReport(trainer1Id, member1Id, Arrays.asList(video3Id));
+//        Long report3Id = reportService.createReport(trainer2Id, member2Id, Arrays.asList(video4Id));
+        Long pointReport1Id = pointReportService.requestPointReport(member1Id, new ApplyPointRequest(Arrays.asList(video1Id, video2Id), true));
+        Long pointReport2Id = pointReportService.requestPointReport(member1Id, new ApplyPointRequest(Arrays.asList(video3Id), false));
+        Long pointReport3Id = pointReportService.requestPointReport(member2Id, new ApplyPointRequest(Arrays.asList(video4Id), true));
 
 
         // 레포트 만들어주기
-        PublishReportRequest reportRequest1 = PublishReportRequest.builder().title("레포트1번 작성지").content("레포트1번 내용").build();
-        reportService.publishReport(report1Id, reportRequest1);
+//        PublishReportRequest reportRequest1 = PublishReportRequest.builder().title("레포트1번 작성지").content("레포트1번 내용").build();
+//        reportService.publishReport(pointReport1Id, reportRequest1);
+
+        pointReportService.writePointReport(pointReport1Id);
         /**
          * 예외 멤버랑 video랑 매칭 잘못 됨
          */

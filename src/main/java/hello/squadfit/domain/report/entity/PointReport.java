@@ -40,6 +40,7 @@ public class PointReport {
 
     // == 연관관계 편의 메서드 == //
     private void addMember(Member member){
+        this.member = member;
         member.getPointReports().add(this);
     }
     private void addVideoPointReport(List<VideoPointReport> videoPointReports){
