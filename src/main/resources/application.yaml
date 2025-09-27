@@ -30,6 +30,14 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+file:
+  # 최종 저장 위치
+  upload-dir: C:/Users/USER/Desktop/squadfit/video
+  # 청크 임시 저장 위치 (없으면 upload-dir 아래에 자동 생성)
+  temp-dir: C:/Users/USER/Desktop/squadfit/video_tmp
+  # 기본 청크 크기(바이트) - 클라이언트에게 안내용
+  default-chunk-size: 5242880  # 5MB
+
 
 #  org.hibernate.type: trace #스프링 부트 2.x, hibernate5
 #  org.hibernate.orm.jdbc.bind: trace #스프링 부트 3.x, hibernate6
