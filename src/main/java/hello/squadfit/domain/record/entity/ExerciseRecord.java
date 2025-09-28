@@ -22,6 +22,7 @@ public class ExerciseRecord {
     private Long id;
 
     private LocalDateTime recordDate;
+    @Column(name = "`repeat`")
     private Integer repeat;
     private Integer weight;
     private Integer successNumber;

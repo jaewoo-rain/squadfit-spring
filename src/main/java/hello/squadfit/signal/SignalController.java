@@ -26,7 +26,7 @@ public class SignalController {
 
     /** TURN/STUN 크레덴셜 발급 (time-limited username, HMAC-SHA1) */
     @GetMapping("/turn/credentials")
-    public Map<String, Object> creds(@RequestParam(defaultValue = "3600") long ttl) {
+    public Map<String, Object> creds(@RequestParam(name = "ttl", defaultValue = "3600") long ttl) {
         long expiry = (System.currentTimeMillis()/1000L) + ttl; // seconds
         String username = String.valueOf(expiry);
         String credential = hmacSha1Base64(AUTH_SECRET, username);
@@ -36,7 +36,7 @@ public class SignalController {
         Map<String,Object> turn = new HashMap<>();
         turn.put("urls", List.of(
                 "turn:" + TURN_HOST + ":3478?transport=udp",
-                "turns:" + TURN_HOST + ":443?transport=tcp"
+                "turn:" + TURN_HOST + ":3478?transport=tcp"
         ));
         turn.put("username", username);
         turn.put("credential", credential);
