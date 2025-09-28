@@ -9,7 +9,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
-
+import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
 public class SignalController {
@@ -22,7 +22,11 @@ public class SignalController {
     private final String AI_OFFER_URL =
             System.getenv().getOrDefault("AI_OFFER_URL", "http://localhost:7000/offer");
 
-    private final RestTemplate http = new RestTemplate();
+    // /candidate URL은 /offer 기준으로 대체 (원하면 환경변수로 분리)
+    private final String AI_CANDIDATE_URL = AI_OFFER_URL.replace("/offer", "/candidate");
+
+    @Autowired
+    private RestTemplate http; // 커넥션 풀 적용된 RestTemplate
 
     /** TURN/STUN 크레덴셜 발급 (time-limited username, HMAC-SHA1) */
     @GetMapping("/turn/credentials")
@@ -52,20 +56,20 @@ public class SignalController {
     /** Offer 프록시 (Flutter → Spring → aiortc) */
     @PostMapping("/signal/offer")
     public ResponseEntity<?> offer(@RequestBody Map<String,Object> body) {
+        long t0 = System.currentTimeMillis();
         try {
-            System.out.println("[SIGNAL] Proxy → " + AI_OFFER_URL);
             ResponseEntity<Map> resp = http.postForEntity(AI_OFFER_URL, body, Map.class);
+            long took = System.currentTimeMillis() - t0;
+            System.out.println("[SIGNAL] /offer roundtrip " + took + " ms");
             return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
 
         } catch (HttpStatusCodeException e) {
-            // ai 서버가 4xx/5xx 응답 시: 원문 바디/상태 그대로 패스스루
             String raw = e.getResponseBodyAsString();
             return ResponseEntity.status(e.getStatusCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(raw);
 
         } catch (ResourceAccessException e) {
-            // ai 서버 연결 실패/타임아웃
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                     .body(Map.of(
                             "error", "AI server unreachable",
@@ -74,10 +78,42 @@ public class SignalController {
                     ));
 
         } catch (Exception e) {
-            // 기타 예외
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "error", "Signal proxy failed",
+                            "detail", e.getMessage()
+                    ));
+        }
+    }
+
+    /** Candidate 프록시 (Flutter → Spring → aiortc) */
+    @PostMapping("/signal/candidate")
+    public ResponseEntity<?> candidate(@RequestBody Map<String,Object> body) {
+        long t0 = System.currentTimeMillis();
+        try {
+            ResponseEntity<Map> resp = http.postForEntity(AI_CANDIDATE_URL, body, Map.class);
+            long took = System.currentTimeMillis() - t0;
+            System.out.println("[SIGNAL] /candidate roundtrip " + took + " ms");
+            return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
+
+        } catch (HttpStatusCodeException e) {
+            String raw = e.getResponseBodyAsString();
+            return ResponseEntity.status(e.getStatusCode())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(raw);
+
+        } catch (ResourceAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                    .body(Map.of(
+                            "error", "AI server unreachable",
+                            "detail", e.getMessage(),
+                            "aiCandidateUrl", AI_CANDIDATE_URL
+                    ));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            "error", "Candidate proxy failed",
                             "detail", e.getMessage()
                     ));
         }
