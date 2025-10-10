@@ -6,6 +6,7 @@ import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,11 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     // 회원가입 -> 멤버, 트레이너 서비스단으로 이동
     public UserEntity join(CreateUserDto dto){
-        UserEntity userEntity = UserEntity.create(dto);
+
+        CreateUserDto userDto = dto.encodePassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+
+        UserEntity userEntity = UserEntity.create(userDto);
         return userRepository.save(userEntity);
     }
 

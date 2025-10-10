@@ -30,9 +30,9 @@ public class Trainer {
     @Column
     private String place; // 체육관 장소
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
+//    @Column(nullable = true)
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
 
 
     // == 연관관계 == //
@@ -49,6 +49,7 @@ public class Trainer {
     private void addUser(UserEntity userEntity) {
         this.userEntity = userEntity;
         userEntity.addTrainer(this);
+        userEntity.addRole(Role.Trainer);
     }
 
 
@@ -56,7 +57,6 @@ public class Trainer {
     public static Trainer create(CreateTrainerDto dto, UserEntity userEntity){
         Trainer trainer = new Trainer();
         trainer.place = dto.getPlace();
-        trainer.role = Role.Trainer;
 
         trainer.addUser(userEntity);
 

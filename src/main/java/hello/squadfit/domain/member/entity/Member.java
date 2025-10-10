@@ -47,12 +47,6 @@ public class Member extends BaseEntity {
 
     private Long missionCount; // 미션 성공 횟수
 
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
@@ -95,6 +89,7 @@ public class Member extends BaseEntity {
     public void addUser(UserEntity userEntity){
         this.userEntity = userEntity;
         userEntity.addMember(this);
+        userEntity.addRole(Role.Member);
     }
 
     // == 생성 메서드 == //
@@ -110,8 +105,6 @@ public class Member extends BaseEntity {
         member.missionCount = 0L;
 
         member.addUser(userEntity);
-
-        member.role = Role.Member;
         return member;
     }
 
