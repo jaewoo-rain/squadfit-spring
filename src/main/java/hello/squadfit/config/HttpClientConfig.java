@@ -1,4 +1,4 @@
-package hello.squadfit.signal;
+package hello.squadfit.config;
 
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;

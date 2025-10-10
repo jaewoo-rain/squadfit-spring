@@ -13,7 +13,8 @@ spring:
       mode: never
 logging.level:
   org.hibernate.SQL: debug
-
+  jwt:
+    secret: tmznjemvltghkdlxldtmznjemvltghkdlxld
 # todo: 보완관련 처리하기
 management:
   endpoints:
