@@ -14,7 +14,7 @@ import static jakarta.persistence.FetchType.*;
 // 출석 정보
 public class Attendance {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
     @Column(nullable = false)

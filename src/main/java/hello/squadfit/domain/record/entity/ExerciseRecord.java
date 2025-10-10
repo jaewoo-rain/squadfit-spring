@@ -17,11 +17,12 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExerciseRecord {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
     private Long id;
 
     private LocalDateTime recordDate;
+    @Column(name = "`repeat`")
     private Integer repeat;
     private Integer weight;
     private Integer successNumber;

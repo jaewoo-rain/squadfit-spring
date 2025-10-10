@@ -1,16 +1,16 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/db/squadfit
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3307/squadfit?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: jaewoo
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        # show_sql: true
-        format_sql: true
+      ddl-auto: create   # 운영 전환 시엔 validate나 none 권장
+  sql:
+    init:
+      mode: never
 logging.level:
   org.hibernate.SQL: debug
 

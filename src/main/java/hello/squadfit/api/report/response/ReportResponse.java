@@ -25,7 +25,7 @@ public class ReportResponse {
 
         Trainer trainer = report.getTrainer();
         reportResponse.trainerId = trainer.getId();
-        reportResponse.trainerName = trainer.getProfile().getName();
+        reportResponse.trainerName = trainer.getUserEntity().getName();
 
         return reportResponse;
     }

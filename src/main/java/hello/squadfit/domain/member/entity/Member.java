@@ -1,8 +1,9 @@
 package hello.squadfit.domain.member.entity;
 
+import hello.squadfit.api.Member.request.ChangeMemberRequest;
 import hello.squadfit.domain.PointConst;
+import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.common.BaseEntity;
-import hello.squadfit.domain.member.dto.ChangeProfileDto;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.report.entity.PointReport;
@@ -28,10 +29,10 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
-    @Embedded
-    private MemberProfile profile;
+//    @Embedded
+//    private MemberProfile profile;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String nickName;
 
     @Column(nullable = false)
@@ -45,10 +46,20 @@ public class Member extends BaseEntity {
     private Integer point;
 
     private Long missionCount; // 미션 성공 횟수
+
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
 
     // == 연관관계 == //
+    @OneToOne(fetch = LAZY,mappedBy = "member")
+    private UserEntity userEntity;
+
     @OneToOne(mappedBy = "member", fetch = LAZY,cascade = ALL)
     private Subscription subscription;
 
@@ -73,8 +84,6 @@ public class Member extends BaseEntity {
 
 //    private List<BestRecord> bestRecords = new ArrayList<>();
 
-
-
     // == 연관관계 편의 메서드 == //
     public void linkSubscription(Subscription subscription) {
         this.subscription = subscription;
@@ -83,23 +92,38 @@ public class Member extends BaseEntity {
         }
     }
 
+    public void addUser(UserEntity userEntity){
+        this.userEntity = userEntity;
+        userEntity.addMember(this);
+    }
 
     // == 생성 메서드 == //
-    public static Member create(CreateMemberDto dto){
+    public static Member create(CreateMemberDto dto, UserEntity userEntity){
         Member member = new Member();
-        member.profile = dto.getProfile();
         member.nickName = dto.getNickName();
         member.level = 1;
         member.requiredExperience = 100;
         member.subscription = null;
         member.point = 0;
-//        member.availableReportCount = 5;
-//        member.subscribed = false;
+        member.availableReportCount = 5;
+        member.subscribed = false;
         member.missionCount = 0L;
+
+        member.addUser(userEntity);
+
+        member.role = Role.Member;
         return member;
     }
 
     // == 비즈니스 로직 == //
+    /**
+     * 프로필 변경
+     */
+    public void changeInfo(ChangeMemberRequest request){
+        this.nickName = request.getNickName();
+
+    }
+
     /**
      * 출석 포인트 증가
      */
@@ -204,14 +228,9 @@ public class Member extends BaseEntity {
     /**
      * 프로필 & 닉네임 변경
      */
-    public void changeProfile(String name, String phone, String birth, String nickName){
-        profile.changeProfile(ChangeProfileDto.builder()
-                        .birth(birth)
-                        .phone(phone)
-                        .name(name)
-                        .build()
-        );
+    public void changeProfile(String nickName){
         this.nickName = nickName;
+
     }
 
     /**

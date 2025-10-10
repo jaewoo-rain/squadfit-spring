@@ -1,6 +1,6 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
+import hello.squadfit.api.Member.request.CreateMemberRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.entity.Member;
 import jakarta.transaction.Transactional;
@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,12 +21,12 @@ class MemberServiceTest {
 
     @Test
     public void register(){
-        CreateMemberProfileRequest createMemberProfileRequest =
-                new CreateMemberProfileRequest(
+        CreateMemberRequest createMemberProfileRequest =
+                new CreateMemberRequest(
                         "test","1234","991111"
                         ,"010-1234-5678","jaewoo","yang");
 
-        Long memberId = memberService.register(createMemberProfileRequest);
+        Long memberId = memberService.join(createMemberProfileRequest);
         Member findMember = memberService.findOne(memberId);
 
         assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());

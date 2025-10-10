@@ -1,6 +1,6 @@
 package hello.squadfit.api.Member.controller;
 
-import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
+import hello.squadfit.api.Member.request.CreateMemberRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.api.Member.response.LoginMemberResponse;
 import hello.squadfit.domain.member.entity.Member;
@@ -22,33 +22,35 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-            log.info("로그인 오류 = {}", bindingResult);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
-        }
-
-        Member loginMember = memberService.login(request);
-        LoginMemberResponse result = LoginMemberResponse.builder()
-                .level(loginMember.getLevel())
-                .point(loginMember.getPoint())
-                .nickName(loginMember.getNickName())
-                .requiredExperience(loginMember.getRequiredExperience())
-                .availableReportCount(loginMember.getAvailableReportCount())
-                .build();
-        return ResponseEntity.status(200).body(result);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
+//
+//        if(bindingResult.hasErrors()){
+//
+//            log.info("로그인 오류 = {}", bindingResult);
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
+//
+//        }
+//
+//        Member loginMember = memberService.login(request);
+//        LoginMemberResponse result = LoginMemberResponse.builder()
+//                .level(loginMember.getLevel())
+//                .point(loginMember.getPoint())
+//                .nickName(loginMember.getNickName())
+//                .requiredExperience(loginMember.getRequiredExperience())
+//                .availableReportCount(loginMember.getAvailableReportCount())
+//                .build();
+//        return ResponseEntity.status(200).body(result);
+//    }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody CreateMemberProfileRequest request, BindingResult bindingResult){
+    public ResponseEntity<?> register(@Valid @RequestBody CreateMemberRequest request, BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
             log.info("회원가입 오류 = {}", bindingResult);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
-        Long memberId = memberService.register(request);
+        Long memberId = memberService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(memberId);
 
     }
