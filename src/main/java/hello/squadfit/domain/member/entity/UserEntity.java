@@ -1,6 +1,7 @@
 package hello.squadfit.domain.member.entity;
 
 import hello.squadfit.api.Member.request.ChangeUserRequest;
+import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.member.dto.CreateUserDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -34,6 +35,11 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     // == 연관관계 == //
     @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(nullable = true, name = "member_id")
@@ -50,6 +56,7 @@ public class UserEntity {
     public void addTrainer(Trainer trainer){
         this.trainer = trainer;
     }
+    public void addRole(Role role){this.role = role;}
 
     // == 생성 메서드 == //
     public static UserEntity create(CreateUserDto dto){
@@ -61,6 +68,13 @@ public class UserEntity {
         userEntity.phone = dto.getPhone();
         userEntity.name = dto.getName();
 
+        return userEntity;
+    }
+
+    public static UserEntity createJwt(String username, Role role){
+        UserEntity userEntity = new UserEntity();
+        userEntity.username = username;
+        userEntity.role = role;
         return userEntity;
     }
 

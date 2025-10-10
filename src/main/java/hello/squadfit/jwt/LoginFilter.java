@@ -1,0 +1,93 @@
+package hello.squadfit.jwt;
+
+
+import hello.squadfit.security.CustomUserDetails;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.IOException;
+import java.time.Duration;
+
+import static hello.squadfit.jwt.JWTExpiredMs.accessExpiredMs;
+import static hello.squadfit.jwt.JWTExpiredMs.refreshExpiredMs;
+
+@Slf4j
+@RequiredArgsConstructor
+public class LoginFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final AuthenticationManager authenticationManager;
+    private final JWTUtil jwtUtil;
+    private final JWTTokenRepository jwtTokenRepository;
+
+
+
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+        String username = obtainUsername(request);
+        String password = obtainPassword(request);
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+
+        return authenticationManager.authenticate(authToken);
+    }
+
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
+
+        // 유저 정보
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String role = userDetails.getRole().toString();
+        String username = userDetails.getUsername();
+
+        // 토큰 생성
+        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
+        String refresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
+
+        // 응답 설정
+        response.setHeader("Authorization", "Bearer " + access);
+        response.addCookie(createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
+
+        saveRefreshToken(username, refresh);
+
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.info("로그인 실패");
+
+        response.setStatus(401);
+    }
+
+    // refresh 토큰 redis 저장하기
+    private void saveRefreshToken(String username, String refresh) {
+
+        jwtTokenRepository.save(username, refresh, Duration.ofMillis(refreshExpiredMs));
+
+    }
+
+    // 쿠키 만들기
+    private Cookie createCookie(String key, String value) {
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(60 * 60 * 24);
+
+        // https 사용할 경우
+//        cookie.setSecure(true);
+
+        cookie.setHttpOnly(true); // 자바스크립트로 접근 불가하게 막기
+
+        return cookie;
+    }
+}

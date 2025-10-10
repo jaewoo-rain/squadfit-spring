@@ -3,7 +3,8 @@ package hello.squadfit.domain.member.dto;
 import hello.squadfit.api.Member.request.CreateUserRequest;
 import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CreateUserDto {
 
@@ -15,13 +16,23 @@ public class CreateUserDto {
 
     public static <T extends CreateUserRequest> CreateUserDto from(T request) {
 
-        CreateUserDto dto = new CreateUserDto();
-        dto.username = request.getUsername();
-        dto.password = request.getPassword();
-        dto.birth = request.getBirth();
-        dto.phone = request.getPhone();
-        dto.name = request.getName();
+        return CreateUserDto.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .birth(request.getBirth())
+                .phone(request.getPhone())
+                .name(request.getName())
+                .build();
 
-        return dto;
+    }
+
+    public CreateUserDto encodePassword(String encodePassword){
+        return CreateUserDto.builder()
+                .username(this.username)
+                .password(encodePassword)
+                .birth(this.birth)
+                .phone(this.phone)
+                .name(this.name)
+                .build();
     }
 }
