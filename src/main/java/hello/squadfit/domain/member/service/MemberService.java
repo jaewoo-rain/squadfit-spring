@@ -1,12 +1,14 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.request.CreateMemberProfileRequest;
+import hello.squadfit.api.Member.request.CreateMemberRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.domain.member.dto.CreateUserDto;
 import hello.squadfit.domain.member.entity.Member;
-import hello.squadfit.domain.member.entity.MemberProfile;
+import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.MemberRepository;
+import hello.squadfit.domain.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,57 +21,37 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Long register(CreateMemberProfileRequest request){
+    public Long join(CreateMemberRequest request){
 
-        MemberProfile profile = MemberProfile.builder()
-                .role(Role.Member)
-                .phone(request.getPhone())
-                .name(request.getName())
-                .password(request.getPassword())
-                .username(request.getUsername())
-                .birth(request.getBirth())
-                .build();
-
-
-        if(existsMemberByUsername(profile)){
+        if(existsMemberByUsername(request.getUsername())){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
-        Member member = Member.create(new CreateMemberDto(profile, request.getNickName()));
+        // user 만들기
+        UserEntity userEntity = userService.join(CreateUserDto.from(request));
+        
+        // member 만들기
+        Member member = Member.create(CreateMemberDto.from(request), userEntity);
         Member save = memberRepository.save(member);
+
         return save.getId();
+    }
+
+    // userId 존재하는지 확인
+    public boolean existsMemberByMemberId(Long memberId){
+        return memberRepository.existsMemberById(memberId);
+    }
+
+    // username 유저 존재하는지 확인하기
+    private boolean existsMemberByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     public Member findOne(Long memberId){
         return memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("멤버 없는데유?"));
     }
-
-    public Member login(LoginRequest loginRequest) {
-        Member findMember = memberRepository.findByProfileUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 아이디입니다."));
-
-        if(!findMember.getProfile().getPassword().equals(loginRequest.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
-        }
-
-        log.info("getPoint = {}", findMember.getPoint());
-
-        return findMember;
-    }
-
-    // 유저 존재하는지 확인
-    public boolean existsMemberByMemberId(Long memberId){
-        return memberRepository.existsMemberById(memberId);
-    }
-
-    // 아이디로 유저 존재하는지 확인하기
-    private boolean existsMemberByUsername(MemberProfile profile) {
-        return memberRepository.existsByProfileUsername(profile.getUsername());
-    }
-
-
-
-
 }

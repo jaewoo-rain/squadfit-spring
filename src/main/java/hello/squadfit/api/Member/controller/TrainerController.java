@@ -26,22 +26,22 @@ public class TrainerController {
     private final TrainerService trainerService;
 
     // 트레이너 로그인
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
-
-        if(bindingResult.hasErrors()){
-            log.info("로그인 오류 = {}", bindingResult);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
-        }
-
-        Trainer loginTrainer = trainerService.login(request);
-        LoginTrainerResponse result = LoginTrainerResponse.builder()
-                .name(loginTrainer.getProfile().getName())
-                .place(loginTrainer.getPlace())
-                .build();
-
-        return ResponseEntity.status(200).body(result);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
+//
+//        if(bindingResult.hasErrors()){
+//            log.info("로그인 오류 = {}", bindingResult);
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
+//        }
+//
+//        Trainer loginTrainer = trainerService.login(request);
+//        LoginTrainerResponse result = LoginTrainerResponse.builder()
+//                .name(loginTrainer.getProfile().getName())
+//                .place(loginTrainer.getPlace())
+//                .build();
+//
+//        return ResponseEntity.status(200).body(result);
+//    }
 
     // 트레이너 회원가입
     @PostMapping("/register")
@@ -51,7 +51,7 @@ public class TrainerController {
             log.info("회원가입 오류 = {}", bindingResult);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
-        Long memberId = trainerService.register(request);
+        Long memberId = trainerService.join(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(memberId);
 
     }
@@ -73,8 +73,8 @@ public class TrainerController {
 
         Trainer trainer = trainerService.findOne(trainerId);
         TrainerInfoResponse result = TrainerInfoResponse.builder()
-                .name(trainer.getProfile().getName())
-                .phone(trainer.getProfile().getPhone())
+                .name(trainer.getUserEntity().getName())
+                .phone(trainer.getUserEntity().getPhone())
                 .place(trainer.getPlace())
                 .build();
 
@@ -91,8 +91,8 @@ public class TrainerController {
 
         List<TrainerInfoResponse> result = trainers.stream()
                 .map(trainer -> TrainerInfoResponse.builder()
-                    .name(trainer.getProfile().getName())
-                    .phone(trainer.getProfile().getPhone())
+                    .name(trainer.getUserEntity().getName())
+                    .phone(trainer.getUserEntity().getPhone())
                     .place(trainer.getPlace())
                     .build()
                 ).toList();

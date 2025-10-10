@@ -1,0 +1,77 @@
+package hello.squadfit.domain.member.entity;
+
+import hello.squadfit.api.Member.request.ChangeUserRequest;
+import hello.squadfit.domain.member.dto.CreateUserDto;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class UserEntity {
+
+    @Id @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String birth;
+
+    @Column(nullable = false)
+    private String phone;
+
+    @Column(nullable = false)
+    private String name;
+
+    // == 연관관계 == //
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(nullable = true, name = "member_id")
+    private Member member;
+
+    @OneToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(nullable = true, name = "trainer_id")
+    private Trainer trainer;
+
+    // == 연관관계 편의 메서드 == //
+    public void addMember(Member member){
+        this.member = member;
+    }
+    public void addTrainer(Trainer trainer){
+        this.trainer = trainer;
+    }
+
+    // == 생성 메서드 == //
+    public static UserEntity create(CreateUserDto dto){
+        UserEntity userEntity = new UserEntity();
+
+        userEntity.username = dto.getUsername();
+        userEntity.password = dto.getPassword();
+        userEntity.birth = dto.getBirth();
+        userEntity.phone = dto.getPhone();
+        userEntity.name = dto.getName();
+
+        return userEntity;
+    }
+
+    /**
+     * 정보 변경
+     */
+    public void changeProfile(ChangeUserRequest request){
+
+        this.birth = request.getBirth();
+        this.phone = request.getPhone();
+        this.name = request.getName();
+    }
+
+}

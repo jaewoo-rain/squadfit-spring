@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter @Builder
-public class CreateTrainerRequest {
+public class CreateTrainerRequest extends CreateUserRequest {
     @NotBlank
     private String username;
     @NotBlank

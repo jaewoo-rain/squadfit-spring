@@ -3,9 +3,14 @@ package hello.squadfit.domain.member.service;
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
 import hello.squadfit.api.Member.request.LoginRequest;
 import hello.squadfit.domain.member.Role;
-import hello.squadfit.domain.member.entity.MemberProfile;
+import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.domain.member.dto.CreateTrainerDto;
+import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Trainer;
+import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.TrainerRepository;
+import hello.squadfit.domain.member.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,41 +25,25 @@ import java.util.List;
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Long register(CreateTrainerRequest request){
+    public Long join(CreateTrainerRequest request){
 
         
         if(trainerExist(request.getUsername())){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
 
-        MemberProfile memberProfile = MemberProfile.builder()
-                .username(request.getUsername())
-                .password(request.getPassword())
-                .birth(request.getBirth())
-                .phone(request.getPhone())
-                .name(request.getName())
-                .role(Role.Trainer)
-                .build();
+        // 유저 만들기
+        UserEntity userEntity = userService.join(CreateUserDto.from(request));
 
-        Trainer trainer = Trainer.create(memberProfile, request.getPlace());
-
+        // 트레이너 만들기
+        Trainer trainer = Trainer.create(CreateTrainerDto.from(request), userEntity);
         trainerRepository.save(trainer);
 
         return trainer.getId();
-    }
-
-    // 로그인
-    public Trainer login(LoginRequest loginRequest) {
-        Trainer findTrainer = trainerRepository.findByProfileUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 아이디입니다."));
-
-        if(!findTrainer.getProfile().getPassword().equals(loginRequest.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
-        }
-
-        return findTrainer;
     }
 
     // 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
@@ -66,13 +55,13 @@ public class TrainerService {
 
     // todo:페이징 적용하기
     public List<Trainer> findAllByName(String trainerName) {
-        return trainerRepository.findAllByProfileName(trainerName);
+        return trainerRepository.findAllByUserEntity_Name(trainerName);
     }
 
 
     // 아이디 이용해서 트레이너 기존에 존재하는지 확인하는 메서드
     private boolean trainerExist(String username) {
-        return trainerRepository.existsTrainerByProfileUsername(username);
+        return userRepository.existsByUsername(username);
     }
 
 }

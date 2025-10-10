@@ -1,0 +1,20 @@
+package hello.squadfit.domain.member.dto;
+
+import hello.squadfit.api.Member.request.CreateTrainerRequest;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter @Setter
+public class CreateTrainerDto {
+
+    private String place; // 체육관 장소
+
+    public static CreateTrainerDto from(CreateTrainerRequest request){
+
+        CreateTrainerDto createTrainerDto = new CreateTrainerDto();
+        createTrainerDto.place = request.getPlace();
+
+        return createTrainerDto;
+    }
+
+}
