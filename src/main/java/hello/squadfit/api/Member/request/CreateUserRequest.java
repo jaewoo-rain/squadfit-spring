@@ -11,5 +11,6 @@ public abstract class CreateUserRequest {
     String birth;
     String phone;
     String name;
+    String gender;
 
 }

@@ -1,4 +1,4 @@
-package hello.squadfit.jwt;
+package hello.squadfit.security.jwt;
 
 
 import hello.squadfit.security.CustomUserDetails;
@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.time.Duration;
 
-import static hello.squadfit.jwt.JWTExpiredMs.accessExpiredMs;
-import static hello.squadfit.jwt.JWTExpiredMs.refreshExpiredMs;
+import static hello.squadfit.security.jwt.JWTExpiredMs.accessExpiredMs;
+import static hello.squadfit.security.jwt.JWTExpiredMs.refreshExpiredMs;
 
 @Slf4j
 @RequiredArgsConstructor

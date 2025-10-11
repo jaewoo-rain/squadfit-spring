@@ -25,24 +25,6 @@ public class TrainerController {
 
     private final TrainerService trainerService;
 
-    // 트레이너 로그인
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@Validated @RequestBody LoginRequest request, BindingResult bindingResult){
-//
-//        if(bindingResult.hasErrors()){
-//            log.info("로그인 오류 = {}", bindingResult);
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
-//        }
-//
-//        Trainer loginTrainer = trainerService.login(request);
-//        LoginTrainerResponse result = LoginTrainerResponse.builder()
-//                .name(loginTrainer.getProfile().getName())
-//                .place(loginTrainer.getPlace())
-//                .build();
-//
-//        return ResponseEntity.status(200).body(result);
-//    }
-
     // 트레이너 회원가입
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody CreateTrainerRequest request, BindingResult bindingResult){
@@ -71,16 +53,12 @@ public class TrainerController {
     @GetMapping("/info/{trainerId}")
     public ResponseEntity<TrainerInfoResponse> getInfo(@PathVariable("trainerId") Long trainerId){
 
-        Trainer trainer = trainerService.findOne(trainerId);
-        TrainerInfoResponse result = TrainerInfoResponse.builder()
-                .name(trainer.getUserEntity().getName())
-                .phone(trainer.getUserEntity().getPhone())
-                .place(trainer.getPlace())
-                .build();
+        TrainerInfoResponse result = trainerService.findTrainerInfo(trainerId);
 
         return ResponseEntity.ok(result);
 
     }
+
     /**
      * 이름으로 트레이너 찾기 todo: 동적쿼리 이용해서 장소나 다른 정보로도 찾을수 있도록 하기
      */
@@ -91,14 +69,12 @@ public class TrainerController {
 
         List<TrainerInfoResponse> result = trainers.stream()
                 .map(trainer -> TrainerInfoResponse.builder()
-                    .name(trainer.getUserEntity().getName())
-                    .phone(trainer.getUserEntity().getPhone())
+                    .name(trainer.getName())
+                    .username(trainer.getUserEntity().getUsername())
                     .place(trainer.getPlace())
                     .build()
                 ).toList();
 
         return ResponseEntity.ok(result);
     }
-
-
 }

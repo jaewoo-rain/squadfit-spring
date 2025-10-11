@@ -1,4 +1,4 @@
-package hello.squadfit.jwt;
+package hello.squadfit.security.jwt;
 
 
 import hello.squadfit.domain.member.Role;
@@ -22,7 +22,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
-    private static final String[] whitelist = {"/join", "/login", "/logout", "/css/*", "/reissue"};
+    private static final String[] whitelist = {"/login","/","/api/member/register", "/api/trainer/register",
+            "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
+            "/turn/credentials", "/signal/offer", "/signal/candidate"};
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

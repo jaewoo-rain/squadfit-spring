@@ -1,12 +1,9 @@
 package hello.squadfit.domain.member.service;
 
 import hello.squadfit.api.Member.request.CreateTrainerRequest;
-import hello.squadfit.api.Member.request.LoginRequest;
-import hello.squadfit.domain.member.Role;
-import hello.squadfit.domain.member.dto.CreateMemberDto;
+import hello.squadfit.api.Member.response.TrainerInfoResponse;
 import hello.squadfit.domain.member.dto.CreateTrainerDto;
 import hello.squadfit.domain.member.dto.CreateUserDto;
-import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.TrainerRepository;
@@ -46,6 +43,15 @@ public class TrainerService {
         return trainer.getId();
     }
 
+    public TrainerInfoResponse findTrainerInfo(Long trainerId){
+
+        Trainer trainer = findOne(trainerId);
+        return  TrainerInfoResponse.builder()
+                .username(trainer.getUserEntity().getUsername())
+                .place(trainer.getPlace())
+                .build();
+    }
+
     // 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
     public Trainer findOne(Long trainerId){
         return trainerRepository.findById(trainerId).orElseThrow(() -> new RuntimeException("트레이너 없는데요?"));
@@ -55,7 +61,7 @@ public class TrainerService {
 
     // todo:페이징 적용하기
     public List<Trainer> findAllByName(String trainerName) {
-        return trainerRepository.findAllByUserEntity_Name(trainerName);
+        return trainerRepository.findAllByName(trainerName);
     }
 
 

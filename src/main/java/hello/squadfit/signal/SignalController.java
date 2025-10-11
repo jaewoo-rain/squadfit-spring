@@ -88,7 +88,6 @@ public class SignalController {
     public ResponseEntity<?> offer(@RequestBody Map<String,Object> body) {
         long t0 = System.currentTimeMillis();
         try {
-            // C++ Ingress의 /offer로 그대로 POST (body: {"sdp": "...", "type": "offer"})
             ResponseEntity<Map> resp = http.postForEntity(AI_OFFER_URL, body, Map.class);
             long took = System.currentTimeMillis() - t0;
             System.out.println("[SIGNAL] /offer roundtrip " + took + " ms");
@@ -97,14 +96,12 @@ public class SignalController {
             return ResponseEntity.status(resp.getStatusCode()).body(resp.getBody());
 
         } catch (HttpStatusCodeException e) {
-            // C++ Ingress에서 4xx/5xx 내려오면 그대로 전달(디버깅에 도움)
             String raw = e.getResponseBodyAsString();
             return ResponseEntity.status(e.getStatusCode())
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(raw);
 
         } catch (ResourceAccessException e) {
-            // C++ Ingress가 죽어있거나 네트워크 불가 등
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                     .body(Map.of(
                             "error", "AI server unreachable",
@@ -113,7 +110,6 @@ public class SignalController {
                     ));
 
         } catch (Exception e) {
-            // 기타 예외
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of(
                             "error", "Signal proxy failed",

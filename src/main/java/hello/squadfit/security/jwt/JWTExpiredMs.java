@@ -1,4 +1,4 @@
-package hello.squadfit.jwt;
+package hello.squadfit.security.jwt;
 
 public interface JWTExpiredMs {
 

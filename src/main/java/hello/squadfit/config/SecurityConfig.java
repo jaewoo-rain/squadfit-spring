@@ -1,9 +1,9 @@
 package hello.squadfit.config;
 
-import hello.squadfit.jwt.JWTFilter;
-import hello.squadfit.jwt.JWTTokenRepository;
-import hello.squadfit.jwt.JWTUtil;
-import hello.squadfit.jwt.LoginFilter;
+import hello.squadfit.security.jwt.JWTFilter;
+import hello.squadfit.security.jwt.JWTTokenRepository;
+import hello.squadfit.security.jwt.JWTUtil;
+import hello.squadfit.security.jwt.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -67,7 +67,10 @@ public class SecurityConfig {
         // 글로벌 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/","/api/member/register", "/api/trainer/register").permitAll()
+                        .requestMatchers(
+                                "/login","/","/api/member/register", "/api/trainer/register",
+                                "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
+                                "/turn/credentials", "/signal/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated()

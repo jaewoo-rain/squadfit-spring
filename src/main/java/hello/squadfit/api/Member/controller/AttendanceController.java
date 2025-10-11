@@ -2,8 +2,10 @@ package hello.squadfit.api.Member.controller;
 
 import hello.squadfit.api.Member.response.AttendanceResponse;
 import hello.squadfit.domain.member.service.AttendanceService;
+import hello.squadfit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public class AttendanceController {
     private final AttendanceService attendanceService;
 
     @PostMapping("/{memberId}")
-    public ResponseEntity<Long> save(@PathVariable("memberId") Long memberId){
+    public ResponseEntity<Long> save(@PathVariable("memberId") Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
 
         Long attendance = attendanceService.attendance(memberId);
 
