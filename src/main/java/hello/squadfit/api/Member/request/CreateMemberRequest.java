@@ -28,5 +28,6 @@ public class CreateMemberRequest extends CreateUserRequest {
     private Integer sedentary; // 앉아있는 시간 -> 숫자로
     @NotNull
     private List<String> health; // 건강 -> 리스트형식
-
+    @NotNull
+    private List<String> exercises; // 평소 하는 운동
 }

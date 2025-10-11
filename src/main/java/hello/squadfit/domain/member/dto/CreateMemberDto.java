@@ -19,6 +19,8 @@ public class CreateMemberDto {
 
     private List<String> health;
 
+    private List<String> exercises;
+
     public static CreateMemberDto from(CreateMemberRequest request){
 
         CreateMemberDto createMemberDto = new CreateMemberDto();
@@ -26,6 +28,7 @@ public class CreateMemberDto {
         createMemberDto.job = request.getJob();
         createMemberDto.sedentary = request.getSedentary();
         createMemberDto.health = request.getHealth();
+        createMemberDto.exercises = request.getExercises();
 
         return createMemberDto;
     }

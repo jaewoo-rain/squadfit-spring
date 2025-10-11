@@ -63,6 +63,13 @@ public class Member extends BaseEntity {
     )
     private List<String> health = new ArrayList<>(); // 건강 테이블
 
+    @ElementCollection(fetch = LAZY)
+    @CollectionTable(
+            name = "member_exercise",
+            joinColumns = @JoinColumn(name = "member_id")
+    )
+    private List<String> exercises = new ArrayList<>(); // 운동 테이블
+    
     // == 연관관계 == //
     @OneToOne(fetch = LAZY,mappedBy = "member")
     private UserEntity userEntity;
@@ -121,6 +128,7 @@ public class Member extends BaseEntity {
         member.health = dto.getHealth();
         member.sedentary = dto.getSedentary();
         member.job = dto.getJob();
+        member.exercises = dto.getExercises();
 
         member.addUser(userEntity);
         return member;
@@ -239,11 +247,12 @@ public class Member extends BaseEntity {
     /**
      * 프로필 & 닉네임 변경
      */
-    public void changeProfile(String nickName, List<String> health, int sedentary, String job ){
+    public void changeProfile(String nickName, List<String> health, int sedentary, String job, List<String> exercises ){
         this.nickName = nickName;
         this.health = health;
         this.sedentary = sedentary;
         this.job = job;
+        this.exercises = exercises;
 
     }
 

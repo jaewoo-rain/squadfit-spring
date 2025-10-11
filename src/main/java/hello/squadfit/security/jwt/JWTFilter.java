@@ -22,9 +22,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
 
-    private static final String[] whitelist = {"/login","/","/api/member/register", "/api/trainer/register",
+    private static final String[] whitelist = {
+            "/login","/","/api/member/register", "/api/trainer/register",
             "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
-            "/turn/credentials", "/signal/offer", "/signal/candidate"};
+            "/turn/credentials", "/signal/offer", "/signal/candidate"
+    };
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
