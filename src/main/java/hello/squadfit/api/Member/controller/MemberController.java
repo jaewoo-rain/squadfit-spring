@@ -2,6 +2,7 @@ package hello.squadfit.api.Member.controller;
 
 import hello.squadfit.api.Member.request.CreateMemberRequest;
 import hello.squadfit.domain.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,13 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody CreateMemberRequest request, BindingResult bindingResult){
+    public ResponseEntity<?> register(@Valid @RequestBody CreateMemberRequest request, BindingResult bindingResult, HttpServletResponse response){
 
         if(bindingResult.hasErrors()){
             log.info("회원가입 오류 = {}", bindingResult);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(bindingResult.toString());
         }
-        Long memberId = memberService.join(request);
+        Long memberId = memberService.join(request, response);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(memberId);
 
