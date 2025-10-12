@@ -1,13 +1,14 @@
 package hello.squadfit.config;
 
-import hello.squadfit.jwt.JWTFilter;
-import hello.squadfit.jwt.JWTTokenRepository;
-import hello.squadfit.jwt.JWTUtil;
-import hello.squadfit.jwt.LoginFilter;
+import hello.squadfit.security.jwt.JWTFilter;
+import hello.squadfit.security.jwt.JWTTokenRepository;
+import hello.squadfit.security.jwt.JWTUtil;
+import hello.squadfit.security.jwt.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,6 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -51,8 +53,14 @@ public class SecurityConfig {
 
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                                configuration.setAllowedMethods(Collections.singletonList("*"));
+//                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//                                configuration.setAllowedMethods(Collections.singletonList("*"));
+                                configuration.setAllowedOriginPatterns(List.of(
+                                        "http://localhost:*",
+                                        "http://127.0.0.1:*",
+                                        "http://10.*.*.*:*"
+                                ));
+                                configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
@@ -67,7 +75,11 @@ public class SecurityConfig {
         // 글로벌 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login","/","/api/member/register", "/api/trainer/register").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/login","/","/api/member/register", "/api/trainer/register",
+                                "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
+                                "/turn/**", "/signal/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/reissue").permitAll()
                         .anyRequest().authenticated()

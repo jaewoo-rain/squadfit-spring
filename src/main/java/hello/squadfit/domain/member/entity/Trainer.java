@@ -30,6 +30,7 @@ public class Trainer {
     @Column
     private String place; // 체육관 장소
 
+    private String name;
 //    @Column(nullable = true)
 //    @Enumerated(EnumType.STRING)
 //    private Role role;
@@ -57,6 +58,7 @@ public class Trainer {
     public static Trainer create(CreateTrainerDto dto, UserEntity userEntity){
         Trainer trainer = new Trainer();
         trainer.place = dto.getPlace();
+        trainer.name = dto.getName();
 
         trainer.addUser(userEntity);
 

@@ -9,9 +9,5 @@ public class ChangeUserRequest {
 
     @NotBlank
     private String birth;
-    @NotBlank
-    private String phone;
-    @NotBlank
-    private String name;
 
 }

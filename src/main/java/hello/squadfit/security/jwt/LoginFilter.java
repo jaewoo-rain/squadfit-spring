@@ -1,9 +1,11 @@
-package hello.squadfit.jwt;
+package hello.squadfit.security.jwt;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hello.squadfit.security.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.time.Duration;
 
-import static hello.squadfit.jwt.JWTExpiredMs.accessExpiredMs;
-import static hello.squadfit.jwt.JWTExpiredMs.refreshExpiredMs;
+import static hello.squadfit.security.jwt.JWTExpiredMs.accessExpiredMs;
+import static hello.squadfit.security.jwt.JWTExpiredMs.refreshExpiredMs;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,17 +32,21 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final JWTUtil jwtUtil;
     private final JWTTokenRepository jwtTokenRepository;
 
-
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
+        try {
+            ServletInputStream inputStream = request.getInputStream();
+            LoginDTO loginDTO = objectMapper.readValue(inputStream, LoginDTO.class);
 
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword(), null);
 
-        return authenticationManager.authenticate(authToken);
+            return authenticationManager.authenticate(authToken);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -50,14 +56,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String role = userDetails.getRole().toString();
         String username = userDetails.getUsername();
+        Long userId = userDetails.getUserId();
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs);
-        String refresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", username, role, accessExpiredMs, userId);
+        String refresh = jwtUtil.createJwt("refresh", username, role, refreshExpiredMs, userId);
 
         // 응답 설정
-        response.setHeader("Authorization", "Bearer " + access);
-        response.addCookie(createCookie("refresh", refresh));
+//        response.setHeader("Authorization", "Bearer " + access);
+        response.setHeader("accessToken", access);
+        response.setHeader("refreshToken", refresh);
+//        response.addCookie(createCookie("refresh", refresh));
         response.setStatus(HttpStatus.OK.value());
 
         saveRefreshToken(username, refresh);

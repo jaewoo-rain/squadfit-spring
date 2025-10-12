@@ -14,7 +14,7 @@ import static jakarta.persistence.FetchType.*;
 public class VideoPointReport {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "video_point_report")
     private Long id;
 

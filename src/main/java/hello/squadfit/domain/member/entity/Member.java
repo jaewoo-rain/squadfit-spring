@@ -36,6 +36,12 @@ public class Member extends BaseEntity {
     private String nickName;
 
     @Column(nullable = false)
+    private String job;
+
+    @Column(nullable = false)
+    private Integer sedentary; // 앉아있는 시간
+
+    @Column(nullable = false)
     private Integer level;
 
     @Column(nullable = false)
@@ -49,7 +55,21 @@ public class Member extends BaseEntity {
 
     @Column(nullable = false)
     private Integer availableReportCount; // 레포트 신청 가능한 숫자
+    
+    @ElementCollection(fetch = LAZY)
+    @CollectionTable(
+            name = "member_health",
+            joinColumns = @JoinColumn(name = "member_id")
+    )
+    private List<String> health = new ArrayList<>(); // 건강 테이블
 
+    @ElementCollection(fetch = LAZY)
+    @CollectionTable(
+            name = "member_exercise",
+            joinColumns = @JoinColumn(name = "member_id")
+    )
+    private List<String> exercises = new ArrayList<>(); // 운동 테이블
+    
     // == 연관관계 == //
     @OneToOne(fetch = LAZY,mappedBy = "member")
     private UserEntity userEntity;
@@ -72,6 +92,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = ALL)
     private List<PointReport> pointReports = new ArrayList<>();
 
+    
 //    private List<Notification> notifications = new ArrayList<>();
 
 //    private List<Payment> payments = new ArrayList<>();
@@ -103,6 +124,11 @@ public class Member extends BaseEntity {
         member.availableReportCount = 5;
         member.subscribed = false;
         member.missionCount = 0L;
+
+        member.health = dto.getHealth();
+        member.sedentary = dto.getSedentary();
+        member.job = dto.getJob();
+        member.exercises = dto.getExercises();
 
         member.addUser(userEntity);
         return member;
@@ -221,8 +247,12 @@ public class Member extends BaseEntity {
     /**
      * 프로필 & 닉네임 변경
      */
-    public void changeProfile(String nickName){
+    public void changeProfile(String nickName, List<String> health, int sedentary, String job, List<String> exercises ){
         this.nickName = nickName;
+        this.health = health;
+        this.sedentary = sedentary;
+        this.job = job;
+        this.exercises = exercises;
 
     }
 

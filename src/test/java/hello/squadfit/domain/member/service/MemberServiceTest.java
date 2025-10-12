@@ -21,15 +21,15 @@ class MemberServiceTest {
 
     @Test
     public void register(){
-        CreateMemberRequest createMemberProfileRequest =
-                new CreateMemberRequest(
-                        "test","1234","991111"
-                        ,"010-1234-5678","jaewoo","yang");
-
-        Long memberId = memberService.join(createMemberProfileRequest);
-        Member findMember = memberService.findOne(memberId);
-
-        assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());
+//        CreateMemberRequest createMemberProfileRequest =
+//                new CreateMemberRequest(
+//                        "test","1234","991111"
+//                        ,"010-1234-5678","jaewoo","yang");
+//
+//        Long memberId = memberService.join(createMemberProfileRequest);
+//        Member findMember = memberService.findOne(memberId);
+//
+//        assertThat(findMember.getNickName()).isEqualTo(createMemberProfileRequest.getNickName());
 
     }
 

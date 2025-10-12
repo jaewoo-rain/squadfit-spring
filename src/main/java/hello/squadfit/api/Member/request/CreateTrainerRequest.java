@@ -14,8 +14,6 @@ public class CreateTrainerRequest extends CreateUserRequest {
     @NotBlank
     private String birth;
     @NotBlank
-    private String phone;
-    @NotBlank
     private String name;
     @NotBlank
     private String place;

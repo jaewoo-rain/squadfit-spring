@@ -24,7 +24,7 @@ public class CommentResponse {
                 .videoId(comment.getVideo().getId())
                 .updateAt(comment.getUpdatedAt())
                 .content(comment.getContent())
-                .trainerName(comment.getTrainer().getUserEntity().getName())
+                .trainerName(comment.getTrainer().getName())
                 .trainerId(comment.getTrainer().getId())
                 .build();
     }

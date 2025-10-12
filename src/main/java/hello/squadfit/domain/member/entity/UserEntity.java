@@ -21,7 +21,7 @@ public class UserEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String username; // 전화번호로
 
     @Column(nullable = false)
     private String password;
@@ -30,11 +30,7 @@ public class UserEntity {
     private String birth;
 
     @Column(nullable = false)
-    private String phone;
-
-    @Column(nullable = false)
-    private String name;
-
+    private String gender;
 
     @Column(nullable = true)
     @Enumerated(EnumType.STRING)
@@ -65,14 +61,14 @@ public class UserEntity {
         userEntity.username = dto.getUsername();
         userEntity.password = dto.getPassword();
         userEntity.birth = dto.getBirth();
-        userEntity.phone = dto.getPhone();
-        userEntity.name = dto.getName();
+        userEntity.gender = dto.getGender();
 
         return userEntity;
     }
 
-    public static UserEntity createJwt(String username, Role role){
+    public static UserEntity createJwt(String username, Role role, Long userId){
         UserEntity userEntity = new UserEntity();
+        userEntity.id = userId;
         userEntity.username = username;
         userEntity.role = role;
         return userEntity;
@@ -84,8 +80,6 @@ public class UserEntity {
     public void changeProfile(ChangeUserRequest request){
 
         this.birth = request.getBirth();
-        this.phone = request.getPhone();
-        this.name = request.getName();
     }
 
 }
