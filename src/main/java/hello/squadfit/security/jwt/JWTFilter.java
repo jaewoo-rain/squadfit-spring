@@ -24,7 +24,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private static final String[] whitelist = {
             "/login","/","/api/member/register", "/api/trainer/register",
-            "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
+            "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**", "/api/member/exists",
             "/turn/credentials", "/signal/offer", "/signal/candidate"
     };
 
@@ -73,7 +73,7 @@ public class JWTFilter extends OncePerRequestFilter {
         Long userId = jwtUtil.getUserId(token);
         Role role = jwtUtil.getRole(token);
 
-        UserEntity userData = UserEntity.createJwt(username, role, userId);
+        UserEntity userData = UserEntity.createByJwt(username, role, userId);
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userData);
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());

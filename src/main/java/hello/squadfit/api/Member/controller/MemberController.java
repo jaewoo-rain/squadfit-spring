@@ -32,5 +32,11 @@ public class MemberController {
 
     }
 
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> existsMember(@RequestParam(name = "username") String username){
+        boolean existed = memberService.existsMemberByUsername(username);
+        return ResponseEntity.ok(existed);
+    }
+
 
 }

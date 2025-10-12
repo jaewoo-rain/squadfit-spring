@@ -76,7 +76,7 @@ public class MemberService {
     }
 
     // username 유저 존재하는지 확인하기
-    private boolean existsMemberByUsername(String username) {
+    public boolean existsMemberByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
