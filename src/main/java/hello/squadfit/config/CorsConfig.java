@@ -13,7 +13,6 @@ public class CorsConfig implements WebMvcConfigurer {
         reg.addMapping("/**")
                 .allowedOriginPatterns("http://localhost:*",
                         "http://127.0.0.1:*",
-                        "http://192.168.*.*:*",
                         "http://10.*.*.*:*")
                 .allowedMethods("GET","POST","OPTIONS")
                 .allowedHeaders("*")

@@ -50,8 +50,8 @@ public class MemberService {
         Member save = memberRepository.save(member);
 
         // 토큰 생성
-        String access = jwtUtil.createJwt("access", userEntity.getUsername(), userEntity.getRole().toString(), accessExpiredMs);
-        String refresh = jwtUtil.createJwt("refresh", userEntity.getUsername(), userEntity.getRole().toString(), refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", userEntity.getUsername(), userEntity.getRole().toString(), accessExpiredMs, userEntity.getId());
+        String refresh = jwtUtil.createJwt("refresh", userEntity.getUsername(), userEntity.getRole().toString(), refreshExpiredMs, userEntity.getId());
 
         // 응답 설정
         response.setHeader("accessToken", access);

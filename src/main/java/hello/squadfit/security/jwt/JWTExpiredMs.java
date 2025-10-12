@@ -2,7 +2,7 @@ package hello.squadfit.security.jwt;
 
 public interface JWTExpiredMs {
 
-    long refreshExpiredMs = 10 * 60 * 1000L; // 12 * 60 * 1000L = 12분
-    long accessExpiredMs = 30 * 1000L; // 30초
+    long refreshExpiredMs = 24 * 6 * 10 * 60 * 1000L; // 24시간
+    long accessExpiredMs = 10 * 60 * 1000L; // 10분
 
 }

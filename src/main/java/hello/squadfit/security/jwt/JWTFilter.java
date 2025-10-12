@@ -35,16 +35,16 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = request.getHeader("Authorization");
+        String token = request.getHeader("accessToken");
 
         // 토큰 없을 때
-        if(accessToken == null || !accessToken.startsWith("Bearer ")){
+        if(token == null){
             filterChain.doFilter(request, response);
 
             return;
         }
 
-        String token = accessToken.split(" ")[1];
+//        String token = accessToken.split(" ")[1];
 
         // 토큰이 access인지 확인
         String category = jwtUtil.getCategory(token);
@@ -70,9 +70,10 @@ public class JWTFilter extends OncePerRequestFilter {
         // 정상 일 때
         String username = jwtUtil.getUsername(token);
         String nickName = jwtUtil.getNickName(token);
+        Long userId = jwtUtil.getUserId(token);
         Role role = jwtUtil.getRole(token);
 
-        UserEntity userData = UserEntity.createJwt(username, role);
+        UserEntity userData = UserEntity.createJwt(username, role, userId);
 
         CustomUserDetails customUserDetails = new CustomUserDetails(userData);
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());

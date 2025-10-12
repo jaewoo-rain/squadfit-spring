@@ -34,13 +34,18 @@ public class JWTUtil {
     // role값 확인
     public Role getRole(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", Role.class);
+        String role = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("role", String.class);
+        return Role.valueOf(role);
     }
 
     // nickName 확인
     public String getNickName(String token){
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("nickName", String.class);
+    }
 
+    // nickName 확인
+    public Long getUserId(String token){
+        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
     }
 
     // 소멸 시간 검증
@@ -57,8 +62,9 @@ public class JWTUtil {
      * 성공시 토큰 생성 메서드, 토큰 반환하기
      * claim 키, value 넣기
      */
-    public String createJwt(String category, String username, String role, Long expiredMs){
+    public String createJwt(String category, String username, String role, Long expiredMs, Long userId){
         return Jwts.builder()
+                .claim("userId", userId)
                 .claim("category", category)
                 .claim("username", username)
                 .claim("role", role)

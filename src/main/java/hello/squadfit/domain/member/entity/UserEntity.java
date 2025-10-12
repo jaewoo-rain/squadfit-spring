@@ -66,8 +66,9 @@ public class UserEntity {
         return userEntity;
     }
 
-    public static UserEntity createJwt(String username, Role role){
+    public static UserEntity createJwt(String username, Role role, Long userId){
         UserEntity userEntity = new UserEntity();
+        userEntity.id = userId;
         userEntity.username = username;
         userEntity.role = role;
         return userEntity;
