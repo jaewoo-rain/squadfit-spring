@@ -1,9 +1,9 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.request.ChangeUserRequest;
 import hello.squadfit.domain.member.dto.CreateUserDto;
 import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.UserRepository;
+import hello.squadfit.domain.member.request.ChangeUserRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

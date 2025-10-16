@@ -1,9 +1,6 @@
 package hello.squadfit.config;
 
-import hello.squadfit.security.jwt.JWTFilter;
-import hello.squadfit.security.jwt.JWTTokenRepository;
-import hello.squadfit.security.jwt.JWTUtil;
-import hello.squadfit.security.jwt.LoginFilter;
+import hello.squadfit.security.jwt.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -77,7 +75,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
-                                "/login","/","/api/member/register", "/api/trainer/register",
+                                "/login","/","/api/member/exists","/api/member/register", "/api/trainer/register",
                                 "/swagger-ui/**", "/swagger-ui.html","/v3/api-docs/**",
                                 "/turn/**", "/signal/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
@@ -105,6 +103,12 @@ public class SecurityConfig {
 //         로그인 필터 앞에? 뒤에? 어디가 좋지?
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+
+        // 로그아웃 필터 추가
+        // 기존 로그아웃 필터 disable 사용한 뒤 addFilterAt 사용해도 됨
+        http
+                .addFilterBefore(new CustomLogoutFilter(jwtUtil, jwtTokenRepository), LogoutFilter.class);
+
 
         return http.build();
 

@@ -49,6 +49,7 @@ public class SignalController {
      */
     @GetMapping("/turn/credentials")
     public Map<String, Object> creds(@RequestParam(name = "ttl", defaultValue = "3600") long ttl) {
+
         long expiry = (System.currentTimeMillis()/1000L) + ttl; // seconds(만료 시각)
         String username = String.valueOf(expiry);               // 만료 에폭을 username으로
         String credential = hmacSha1Base64(AUTH_SECRET, username); // coturn secret로 서명

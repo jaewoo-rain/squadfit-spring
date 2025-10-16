@@ -1,6 +1,5 @@
 package hello.squadfit.domain.video.service;
 
-import hello.squadfit.api.video.response.CommentResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.service.MemberService;
@@ -9,6 +8,7 @@ import hello.squadfit.domain.video.entity.Comment;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.entity.VideoVisibility;
 import hello.squadfit.domain.video.repository.CommentRepository;
+import hello.squadfit.domain.video.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

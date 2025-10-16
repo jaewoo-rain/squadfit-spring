@@ -1,7 +1,5 @@
 package hello.squadfit.domain.video.service;
 
-import hello.squadfit.api.video.request.SaveVideoRequest;
-import hello.squadfit.api.video.response.VideoResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
@@ -10,6 +8,8 @@ import hello.squadfit.domain.video.dto.SaveVideoDto;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.entity.VideoVisibility;
 import hello.squadfit.domain.video.repository.VideoRepository;
+import hello.squadfit.domain.video.request.SaveVideoRequest;
+import hello.squadfit.domain.video.response.VideoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

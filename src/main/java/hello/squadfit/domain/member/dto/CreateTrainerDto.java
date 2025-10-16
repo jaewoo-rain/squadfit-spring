@@ -1,6 +1,6 @@
 package hello.squadfit.domain.member.dto;
 
-import hello.squadfit.api.Member.request.CreateTrainerRequest;
+import hello.squadfit.domain.member.request.CreateTrainerRequest;
 import lombok.Getter;
 import lombok.Setter;
 

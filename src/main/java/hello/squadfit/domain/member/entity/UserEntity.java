@@ -1,8 +1,8 @@
 package hello.squadfit.domain.member.entity;
 
-import hello.squadfit.api.Member.request.ChangeUserRequest;
 import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.member.dto.CreateUserDto;
+import hello.squadfit.domain.member.request.ChangeUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -66,7 +66,7 @@ public class UserEntity {
         return userEntity;
     }
 
-    public static UserEntity createJwt(String username, Role role, Long userId){
+    public static UserEntity createByJwt(String username, Role role, Long userId){
         UserEntity userEntity = new UserEntity();
         userEntity.id = userId;
         userEntity.username = username;

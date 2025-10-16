@@ -1,13 +1,13 @@
 package hello.squadfit.domain.report.service;
 
-import hello.squadfit.api.report.request.ApplyPointRequest;
-import hello.squadfit.api.report.response.PointReportListResponse;
-import hello.squadfit.api.report.response.PointReportResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.report.entity.PointReport;
 import hello.squadfit.domain.report.entity.VideoPointReport;
 import hello.squadfit.domain.report.repository.PointReportRepository;
+import hello.squadfit.domain.report.request.ApplyPointRequest;
+import hello.squadfit.domain.report.response.PointReportListResponse;
+import hello.squadfit.domain.report.response.PointReportResponse;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.service.VideoService;
 import lombok.RequiredArgsConstructor;

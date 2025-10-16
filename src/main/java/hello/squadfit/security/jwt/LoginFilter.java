@@ -86,17 +86,4 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         jwtTokenRepository.save(username, refresh, Duration.ofMillis(refreshExpiredMs));
 
     }
-
-    // 쿠키 만들기
-    private Cookie createCookie(String key, String value) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 24);
-
-        // https 사용할 경우
-//        cookie.setSecure(true);
-
-        cookie.setHttpOnly(true); // 자바스크립트로 접근 불가하게 막기
-
-        return cookie;
-    }
 }

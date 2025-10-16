@@ -1,14 +1,12 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.request.CreateMemberRequest;
-import hello.squadfit.api.Member.request.LoginRequest;
-import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.member.dto.CreateUserDto;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.MemberRepository;
 import hello.squadfit.domain.member.repository.UserRepository;
+import hello.squadfit.domain.member.request.CreateMemberRequest;
 import hello.squadfit.security.jwt.JWTTokenRepository;
 import hello.squadfit.security.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -76,7 +74,7 @@ public class MemberService {
     }
 
     // username 유저 존재하는지 확인하기
-    private boolean existsMemberByUsername(String username) {
+    public boolean existsMemberByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 
