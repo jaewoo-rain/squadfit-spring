@@ -138,8 +138,14 @@ public class Member extends BaseEntity {
     /**
      * 프로필 변경
      */
-    public void changeInfo(ChangeMemberRequest request){
+    public Long changeInfo(ChangeMemberRequest request){
         this.nickName = request.getNickName();
+        this.health = request.getHealth();
+        this.exercises = request.getExercises();
+        this.sedentary = request.getSedentary();
+        this.job = request.getJob();
+
+        return this.id;
 
     }
 
@@ -241,6 +247,7 @@ public class Member extends BaseEntity {
      * 구독 여부 확인
      */
     private boolean isNotExistSubscription() {
+
         return this.subscription == null || this.subscribed == false;
     }
 

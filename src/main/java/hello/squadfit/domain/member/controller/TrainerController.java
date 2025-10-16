@@ -1,14 +1,18 @@
 package hello.squadfit.domain.member.controller;
 
+import hello.squadfit.domain.PageResponse;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.request.CreateTrainerRequest;
 import hello.squadfit.domain.member.response.TrainerInfoResponse;
 import hello.squadfit.domain.member.service.TrainerService;
+import hello.squadfit.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +24,7 @@ import java.util.List;
 @RequestMapping("api/trainer")
 public class TrainerController {
 
+    // todo: 트레이너 부분은 나중에 추가 테스트하기
     private final TrainerService trainerService;
 
     // 트레이너 회원가입
@@ -47,10 +52,10 @@ public class TrainerController {
     /**
      * 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
      */
-    @GetMapping("/info/{trainerId}")
-    public ResponseEntity<TrainerInfoResponse> getInfo(@PathVariable("trainerId") Long trainerId){
+    @GetMapping("/info")
+    public ResponseEntity<TrainerInfoResponse> getInfo(@AuthenticationPrincipal CustomUserDetails userDetails){
 
-        TrainerInfoResponse result = trainerService.findTrainerInfo(trainerId);
+        TrainerInfoResponse result = trainerService.findTrainerInfo(userDetails.getUserId());
 
         return ResponseEntity.ok(result);
 
@@ -60,17 +65,14 @@ public class TrainerController {
      * 이름으로 트레이너 찾기 todo: 동적쿼리 이용해서 장소나 다른 정보로도 찾을수 있도록 하기
      */
     @GetMapping("/search")
-    public ResponseEntity<?> findTrainerByName(@RequestParam("name") String name){
+    public ResponseEntity<PageResponse<TrainerInfoResponse>> findTrainerByName(
+            @RequestParam("name") String name,
+            @RequestParam(defaultValue = "10", name = "size") int size,
+            @RequestParam(defaultValue = "0", name = "page") int page
+    ){
 
-        List<Trainer> trainers =  trainerService.findAllByName(name);
-
-        List<TrainerInfoResponse> result = trainers.stream()
-                .map(trainer -> TrainerInfoResponse.builder()
-                    .name(trainer.getName())
-                    .username(trainer.getUserEntity().getUsername())
-                    .place(trainer.getPlace())
-                    .build()
-                ).toList();
+        Page<TrainerInfoResponse> trainerInfoPage = trainerService.findAllByName(name, size, page);
+        PageResponse<TrainerInfoResponse> result = PageResponse.from(trainerInfoPage);
 
         return ResponseEntity.ok(result);
     }

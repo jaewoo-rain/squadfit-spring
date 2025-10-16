@@ -6,6 +6,7 @@ import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.MemberRepository;
 import hello.squadfit.domain.member.repository.UserRepository;
+import hello.squadfit.domain.member.request.ChangeMemberRequest;
 import hello.squadfit.domain.member.request.CreateMemberRequest;
 import hello.squadfit.security.jwt.JWTTokenRepository;
 import hello.squadfit.security.jwt.JWTUtil;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import static hello.squadfit.security.jwt.JWTExpiredMs.accessExpiredMs;
 import static hello.squadfit.security.jwt.JWTExpiredMs.refreshExpiredMs;
@@ -61,6 +63,14 @@ public class MemberService {
         return save.getId();
     }
 
+    @Transactional
+    // 유저 정보 변경하기
+    public Long changeMemberInfo(ChangeMemberRequest request, Long userId) {
+        Member member = memberRepository.findByUserEntity_Id(userId).orElseThrow(() -> new RuntimeException("해당하는 멤버가 없습니다"));
+
+        return member.changeInfo(request);
+    }
+
     // refresh 토큰 redis 저장하기
     private void saveRefreshToken(String username, String refresh) {
 
@@ -68,7 +78,7 @@ public class MemberService {
 
     }
 
-    // userId 존재하는지 확인
+    // memberId 존재하는지 확인
     public boolean existsMemberByMemberId(Long memberId){
         return memberRepository.existsMemberById(memberId);
     }
@@ -81,4 +91,9 @@ public class MemberService {
     public Member findOne(Long memberId){
         return memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("멤버 없는데유?"));
     }
+
+    public Member findOneByUserId(Long userId){
+        return memberRepository.findByUserEntity_Id(userId).orElseThrow(() -> new RuntimeException("유저 없는데유?"));
+    }
+
 }

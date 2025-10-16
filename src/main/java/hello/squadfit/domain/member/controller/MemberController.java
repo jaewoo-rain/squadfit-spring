@@ -1,13 +1,16 @@
 package hello.squadfit.domain.member.controller;
 
+import hello.squadfit.domain.member.request.ChangeMemberRequest;
 import hello.squadfit.domain.member.request.CreateMemberRequest;
 import hello.squadfit.domain.member.service.MemberService;
+import hello.squadfit.security.CustomUserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +35,21 @@ public class MemberController {
 
     }
 
+    // 아이디 존재하는지 확인
     @GetMapping("/exists")
     public ResponseEntity<Boolean> existsMember(@RequestParam(name = "username") String username){
         boolean existed = memberService.existsMemberByUsername(username);
         return ResponseEntity.ok(existed);
+    }
+
+    // 정보 변경하기
+    @PostMapping("/change-info")
+    public ResponseEntity<Long> changeInfo(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody ChangeMemberRequest request
+    ){
+        Long memberId = memberService.changeMemberInfo(request, userDetails.getUserId());
+        return ResponseEntity.ok(memberId);
     }
 
 

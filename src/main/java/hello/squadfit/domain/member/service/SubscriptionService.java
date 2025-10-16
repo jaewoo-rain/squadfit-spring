@@ -2,6 +2,7 @@ package hello.squadfit.domain.member.service;
 
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Subscription;
+import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -14,41 +15,52 @@ import java.time.LocalDateTime;
 @Transactional
 public class SubscriptionService {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
+    private final UserService userService;
 
     // 구독하기
-    public Long createSubscription(Long memberId){
+    public Long createSubscription(Long userId){
 
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람 없어유"));
+        Member member = memberService.findOneByUserId(userId);
+
+        Member findMember = memberService.findOne(member.getId());
+
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = startDate.plusMonths(1);
 
-        Long subscriptionId = findMember.subscribe(startDate, endDate);
-
-        return subscriptionId;
+        return findMember.subscribe(startDate, endDate);
 
     }
 
     // 해제하기
-    public void cancelSubscription(Long memberId){
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람이 맞아요?"));
+    public Long cancelSubscription(Long userId){
+
+        Member member = memberService.findOneByUserId(userId);
+
+        Member findMember = memberService.findOne(member.getId());
+
         findMember.cancelSubscription();
+
+        return member.getId();
     }
 
     // 연장하기
-    public Long extendSubscription(Long memberId){
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람이 맞아요?"));
+    public Long extendSubscription(Long userId){
+        Member member = memberService.findOneByUserId(userId);
+
+        Member findMember = memberService.findOne(member.getId());
 
         Subscription subscription = findMember.getSubscription();
-        if (subscription == null) {
-            throw new IllegalStateException("구독 안한거같은데?");
+
+        // endDate 계산하기 위해 nullPointException 처리
+        if(subscription == null){
+            throw new RuntimeException("구독 한거 맞아?");
         }
+
         LocalDateTime originalEndDate = subscription.getEndDate();
-
         LocalDateTime endDate = originalEndDate.plusMonths(1);
-        Long subscriptionId = findMember.extendSubscription(endDate);
 
-        return subscriptionId;
+        return findMember.extendSubscription(endDate);
     }
 
 }
