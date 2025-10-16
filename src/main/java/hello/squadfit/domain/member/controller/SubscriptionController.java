@@ -14,21 +14,24 @@ public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
 
-    @PostMapping("/{memberId}")
+    // 구독하기
+    @PostMapping
     public ResponseEntity<Long> createSubscription(@AuthenticationPrincipal CustomUserDetails userDetails){
         Long subscriptionId = subscriptionService.createSubscription(userDetails.getUserId());
 
         return ResponseEntity.ok(subscriptionId);
     }
 
-    @DeleteMapping("/{memberId}")
+    // 구독 해제
+    @DeleteMapping
     public ResponseEntity<String> cancelSubscription(@AuthenticationPrincipal CustomUserDetails userDetails){
         Long memberId = subscriptionService.cancelSubscription(userDetails.getUserId());
 
         return ResponseEntity.ok("해제성공" + memberId);
     }
 
-    @PutMapping("/{memberId}")
+    // 구독 연장하기
+    @PutMapping
     public ResponseEntity<Long> extendSubscription(@AuthenticationPrincipal CustomUserDetails userDetails){
         Long subscriptionId = subscriptionService.extendSubscription(userDetails.getUserId());
 
