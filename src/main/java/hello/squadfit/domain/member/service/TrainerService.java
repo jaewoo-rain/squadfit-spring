@@ -47,10 +47,7 @@ public class TrainerService {
     public TrainerInfoResponse findTrainerInfo(Long userId){
 
         Trainer trainer = findByUserId(userId);
-        return  TrainerInfoResponse.builder()
-                .username(trainer.getUserEntity().getUsername())
-                .place(trainer.getPlace())
-                .build();
+        return new TrainerInfoResponse(trainer.getUserEntity().getUsername(), trainer.getPlace(), trainer.getName());
     }
 
     // 트레이너 관련 정보 받기 todo: 트레이너 정보 추가적으로 어떤거 넣을지 의논하기
