@@ -14,41 +14,40 @@ import java.time.LocalDateTime;
 @Transactional
 public class SubscriptionService {
 
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
     // 구독하기
     public Long createSubscription(Long memberId){
 
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람 없어유"));
+        Member findMember = memberService.findOne(memberId);
+
         LocalDateTime startDate = LocalDateTime.now();
         LocalDateTime endDate = startDate.plusMonths(1);
 
-        Long subscriptionId = findMember.subscribe(startDate, endDate);
-
-        return subscriptionId;
+        return findMember.subscribe(startDate, endDate);
 
     }
 
     // 해제하기
-    public void cancelSubscription(Long memberId){
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람이 맞아요?"));
+    public Long cancelSubscription(Long memberId){
+
+        Member findMember = memberService.findOne(memberId);
+
         findMember.cancelSubscription();
+
+        return memberId;
     }
 
     // 연장하기
     public Long extendSubscription(Long memberId){
-        Member findMember = memberRepository.findById(memberId).orElseThrow(() -> new IllegalStateException("사람이 맞아요?"));
+        Member findMember = memberService.findOne(memberId);
 
         Subscription subscription = findMember.getSubscription();
-        if (subscription == null) {
-            throw new IllegalStateException("구독 안한거같은데?");
-        }
+
         LocalDateTime originalEndDate = subscription.getEndDate();
-
         LocalDateTime endDate = originalEndDate.plusMonths(1);
-        Long subscriptionId = findMember.extendSubscription(endDate);
 
-        return subscriptionId;
+        return findMember.extendSubscription(endDate);
     }
 
 }
