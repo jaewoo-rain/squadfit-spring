@@ -2,13 +2,16 @@ package hello.squadfit.domain.member.service;
 
 import hello.squadfit.domain.member.entity.Attendance;
 import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.repository.AttendanceRepository;
 import hello.squadfit.domain.member.response.AttendanceResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,6 +19,7 @@ import java.util.List;
 public class AttendanceService {
 
     private final MemberService memberService;
+    private final AttendanceRepository attendanceRepository;
 
     // 출석하기
     @Transactional
@@ -37,17 +41,16 @@ public class AttendanceService {
     }
 
     // 출석 조회하기
-    public List<AttendanceResponse> findAttendanceByMember(Long memberId){
+    public Page<AttendanceResponse> findAttendanceByMember(Long memberId, int page, int size){
 
-        Member member = memberService.findOne(memberId);
-        List<Attendance> attendances = member.getAttendances();
+        PageRequest pr = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "attendanceTime"));
 
-        return attendances.stream().map(attendance -> AttendanceResponse.builder()
-                        .attendanceTime(attendance.getAttendanceTime())
-                        .memberName(attendance.getMember().getNickName())
-                        .build()
-        ).toList();
-        
+        Page<Attendance> attendancePage = attendanceRepository.findPageAttendance(memberId, pr);
+
+        Page<AttendanceResponse> responses = attendancePage.map((attendance -> AttendanceResponse.from(attendance)));
+
+        return responses;
+
     }
     
     // 오늘 출석 했는지 확인하기
