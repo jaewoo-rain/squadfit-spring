@@ -247,6 +247,7 @@ public class Member extends BaseEntity {
      * 구독 여부 확인
      */
     private boolean isNotExistSubscription() {
+
         return this.subscription == null || this.subscribed == false;
     }
 

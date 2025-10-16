@@ -1,5 +1,7 @@
 package hello.squadfit.domain.member.controller;
 
+import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.service.MemberService;
 import hello.squadfit.domain.member.service.SubscriptionService;
 import hello.squadfit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class SubscriptionController {
 
     private final SubscriptionService subscriptionService;
+    private final MemberService memberService;
 
     // 구독하기
     @PostMapping

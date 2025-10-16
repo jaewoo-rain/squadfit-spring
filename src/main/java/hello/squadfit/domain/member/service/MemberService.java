@@ -92,4 +92,8 @@ public class MemberService {
         return memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("멤버 없는데유?"));
     }
 
+    public Member findOneByUserId(Long userId){
+        return memberRepository.findByUserEntity_Id(userId).orElseThrow(() -> new RuntimeException("유저 없는데유?"));
+    }
+
 }
