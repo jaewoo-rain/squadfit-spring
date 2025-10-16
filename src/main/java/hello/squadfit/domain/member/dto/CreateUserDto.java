@@ -1,6 +1,6 @@
 package hello.squadfit.domain.member.dto;
 
-import hello.squadfit.api.Member.request.CreateUserRequest;
+import hello.squadfit.domain.member.request.CreateUserRequest;
 import lombok.*;
 
 @Getter @Setter @Builder

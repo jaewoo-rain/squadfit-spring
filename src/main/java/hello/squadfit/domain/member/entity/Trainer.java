@@ -1,8 +1,8 @@
 package hello.squadfit.domain.member.entity;
 
-import hello.squadfit.api.Member.request.ChangeTrainerRequest;
 import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.member.dto.CreateTrainerDto;
+import hello.squadfit.domain.member.request.ChangeTrainerRequest;
 import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.video.entity.Comment;
 import jakarta.persistence.*;

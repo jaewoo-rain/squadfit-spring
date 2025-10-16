@@ -1,8 +1,8 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.response.AttendanceResponse;
 import hello.squadfit.domain.member.entity.Attendance;
 import hello.squadfit.domain.member.entity.Member;
+import hello.squadfit.domain.member.response.AttendanceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

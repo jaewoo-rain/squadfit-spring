@@ -1,7 +1,5 @@
 package hello.squadfit.domain.report.service;
 
-import hello.squadfit.api.report.request.PublishReportRequest;
-import hello.squadfit.api.report.response.ReportResponse;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.service.MemberService;
@@ -9,6 +7,8 @@ import hello.squadfit.domain.member.service.TrainerService;
 import hello.squadfit.domain.report.entity.Report;
 import hello.squadfit.domain.report.entity.VideoReport;
 import hello.squadfit.domain.report.repository.ReportRepository;
+import hello.squadfit.domain.report.request.PublishReportRequest;
+import hello.squadfit.domain.report.response.ReportResponse;
 import hello.squadfit.domain.video.entity.Video;
 import hello.squadfit.domain.video.service.VideoService;
 import lombok.RequiredArgsConstructor;

@@ -1,9 +1,9 @@
 package hello.squadfit.domain.member.entity;
 
-import hello.squadfit.api.Member.request.ChangeMemberRequest;
 import hello.squadfit.domain.PointConst;
 import hello.squadfit.domain.member.Role;
 import hello.squadfit.domain.common.BaseEntity;
+import hello.squadfit.domain.member.request.ChangeMemberRequest;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
 import hello.squadfit.domain.member.dto.CreateMemberDto;
 import hello.squadfit.domain.report.entity.PointReport;

@@ -1,7 +1,5 @@
 package hello.squadfit.security.reissue;
 
-import hello.squadfit.domain.member.service.UserService;
-import hello.squadfit.security.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

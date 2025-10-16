@@ -1,13 +1,13 @@
 package hello.squadfit.domain.member.service;
 
-import hello.squadfit.api.Member.request.CreateTrainerRequest;
-import hello.squadfit.api.Member.response.TrainerInfoResponse;
 import hello.squadfit.domain.member.dto.CreateTrainerDto;
 import hello.squadfit.domain.member.dto.CreateUserDto;
 import hello.squadfit.domain.member.entity.Trainer;
 import hello.squadfit.domain.member.entity.UserEntity;
 import hello.squadfit.domain.member.repository.TrainerRepository;
 import hello.squadfit.domain.member.repository.UserRepository;
+import hello.squadfit.domain.member.request.CreateTrainerRequest;
+import hello.squadfit.domain.member.response.TrainerInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,8 @@
 package hello.squadfit.domain.record.service;
 
-import hello.squadfit.api.Member.response.mapper.SingleRecordResponseMapper;
-import hello.squadfit.api.record.request.SaveRecordRequest;
-import hello.squadfit.api.Member.response.AllRecordResponse;
-import hello.squadfit.api.Member.response.SingleRecordResponse;
+import hello.squadfit.domain.member.response.AllRecordResponse;
+import hello.squadfit.domain.member.response.SingleRecordResponse;
+import hello.squadfit.domain.member.response.mapper.SingleRecordResponseMapper;
 import hello.squadfit.domain.record.dto.CreateRecordDto;
 import hello.squadfit.domain.record.entity.ExerciseType;
 import hello.squadfit.domain.record.entity.ExerciseRecord;
@@ -11,6 +10,7 @@ import hello.squadfit.domain.record.repository.ExerciseTypeRepository;
 import hello.squadfit.domain.record.repository.RecordRepository;
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.repository.MemberRepository;
+import hello.squadfit.domain.record.request.SaveRecordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
