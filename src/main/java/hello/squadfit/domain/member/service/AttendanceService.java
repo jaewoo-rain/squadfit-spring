@@ -22,6 +22,11 @@ public class AttendanceService {
     public Long attendance(Long memberId){
         Member member = memberService.findOne(memberId);
         
+        // 오늘 출석했는지 확인하기
+        if(checkAttendance(member)){
+            throw new RuntimeException("오늘 중복 출석입니다.");
+        }
+
         // 출석 하기 -> 변경 감지로 엔티티 저장 됨
         Attendance attendance = Attendance.create(member);
 
@@ -45,11 +50,11 @@ public class AttendanceService {
         
     }
     
-    // todo:출석 여부 확인하기 필요한가? 필요하다면 어떻게하지? 생각 더 해보기
-    public Boolean checkAttendance(Long memberId){
+    // 오늘 출석 했는지 확인하기
+    public Boolean checkAttendance(Member findMember){
 
-        Member findMember = memberService.findOne(memberId);
-        return findMember.getAttendances().stream().anyMatch(attendance -> attendance.getAttendanceTime().toLocalDate().isEqual(LocalDate.now()));
+        return findMember.getAttendances().stream().anyMatch(
+                attendance -> attendance.getAttendanceTime().toLocalDate().isEqual(LocalDate.now()));
 
     }
 }

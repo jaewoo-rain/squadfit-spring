@@ -17,19 +17,20 @@ public class AttendanceController {
 
     private final AttendanceService attendanceService;
 
-    @PostMapping("/{memberId}")
-    public ResponseEntity<Long> save(@PathVariable("memberId") Long memberId, @AuthenticationPrincipal CustomUserDetails userDetails){
+    // 출석하기
+    @PostMapping
+    public ResponseEntity<Long> save(@AuthenticationPrincipal CustomUserDetails userDetails){
 
-        Long attendance = attendanceService.attendance(memberId);
+        Long attendance = attendanceService.attendance(userDetails.getUserId());
 
         return ResponseEntity.ok(attendance);
     }
 
-    @GetMapping("/{memberId}")
-    public ResponseEntity<List<AttendanceResponse>> findByMember(@PathVariable("memberId") Long memberId){
+    @GetMapping
+    public ResponseEntity<List<AttendanceResponse>> findByMember(@AuthenticationPrincipal CustomUserDetails userDetails){
 
         // todo: 서비스단에서 엔티티같은걸로 받아서 컨트롤러단에서 dto 생성해야할듯?
-        List<AttendanceResponse> result = attendanceService.findAttendanceByMember(memberId);
+        List<AttendanceResponse> result = attendanceService.findAttendanceByMember(userDetails.getUserId());
 
         return ResponseEntity.ok(result);
 
