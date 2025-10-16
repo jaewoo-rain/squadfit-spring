@@ -10,6 +10,8 @@ import hello.squadfit.domain.member.request.CreateTrainerRequest;
 import hello.squadfit.domain.member.response.TrainerInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,6 @@ public class TrainerService {
     @Transactional
     public Long join(CreateTrainerRequest request){
 
-        
         if(trainerExist(request.getUsername())){
             throw new IllegalStateException("이미 가입되어있는 아이디입니다.");
         }
@@ -43,9 +44,9 @@ public class TrainerService {
         return trainer.getId();
     }
 
-    public TrainerInfoResponse findTrainerInfo(Long trainerId){
+    public TrainerInfoResponse findTrainerInfo(Long userId){
 
-        Trainer trainer = findOne(trainerId);
+        Trainer trainer = findByUserId(userId);
         return  TrainerInfoResponse.builder()
                 .username(trainer.getUserEntity().getUsername())
                 .place(trainer.getPlace())
@@ -59,9 +60,14 @@ public class TrainerService {
     // 트레이너 프로필 변경 todo: 트레이너 정보 추가될테니까 나중에하기
 
 
-    // todo:페이징 적용하기
-    public List<Trainer> findAllByName(String trainerName) {
-        return trainerRepository.findAllByName(trainerName);
+    // 이름으로 트레이너 찾기
+    public Page<TrainerInfoResponse> findAllByName(String trainerName, int size, int page) {
+        Page<Trainer> trainerPage = trainerRepository.findAllByName(trainerName, PageRequest.of(size, page));
+        return trainerPage.map((trainer -> TrainerInfoResponse.from(trainer)));
+    }
+
+    public Trainer findByUserId(Long userId){
+        return trainerRepository.findOneByUserEntity_Id(userId);
     }
 
 
