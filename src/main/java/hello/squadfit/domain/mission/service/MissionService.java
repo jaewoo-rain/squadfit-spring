@@ -2,6 +2,7 @@ package hello.squadfit.domain.mission.service;
 
 import hello.squadfit.domain.member.entity.Member;
 import hello.squadfit.domain.member.service.MemberService;
+import hello.squadfit.domain.member.service.UserService;
 import hello.squadfit.domain.mission.entity.Mission;
 import hello.squadfit.domain.mission.repository.MissionRepository;
 import hello.squadfit.domain.mission.request.CreateMissionRequest;
@@ -23,6 +24,7 @@ public class MissionService {
 
     private final MissionRepository missionRepository;
     private final MemberService memberService;
+    private final UserService userService;
 
     // 미션 만들기
     public Long createMission(CreateMissionRequest request){
@@ -55,9 +57,9 @@ public class MissionService {
 
     // 미션 성공
     // 한달 시 미션 완료 여부에 따른 답장 해주기, 미션 성공 횟수 초기화
-    public Long successMission(Long memberId){
-        Member findMember = memberService.findOne(memberId);
-        
+    public Long successMission(Long userId){
+        Member findMember = memberService.findOneByUserId(userId);
+
         findMember.successMission();
         Long missionCount = findMember.getMissionCount();
         // todo: 하루에 여러번 미션 성공 못하게 로직 작성하기
