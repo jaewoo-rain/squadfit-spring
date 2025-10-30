@@ -3,8 +3,10 @@ package hello.squadfit.domain.mission.controller;
 import hello.squadfit.domain.mission.request.CreateMissionRequest;
 import hello.squadfit.domain.mission.response.MissionResponse;
 import hello.squadfit.domain.mission.service.MissionService;
+import hello.squadfit.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,10 +17,10 @@ public class MissionController {
     private final MissionService missionService;
 
     // 미션 성공
-    @PutMapping("/{memberId}")
-    public ResponseEntity<Long> successMission(@PathVariable("memberId") Long memberId){
+    @PutMapping
+    public ResponseEntity<Long> successMission(@AuthenticationPrincipal CustomUserDetails userDetails){
 
-        Long successMission = missionService.successMission(memberId);
+        Long successMission = missionService.successMission(userDetails.getUserId());
 
         return ResponseEntity.ok(successMission);
 
